@@ -45,6 +45,14 @@ class administrador_de_ventanas():
         pantalla.blit(boton_salir, (posX_botones_menu, 500))
 
         pygame.display.update()
+        if pygame.mouse.get_pressed()[0] == True:
+            if posX_botones_menu <= pygame.mouse.get_pos()[0] <= posX_botones_menu + 200:
+                if 500 <= pygame.mouse.get_pos()[1] <= 500 + 50:
+                    self.salir()
+
+    def salir(self):
+        pygame.quit()
+        sys.exit()
 
 #programa principal
 while True:
