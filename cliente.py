@@ -5,8 +5,9 @@ print("juego iniciado")
 pygame.init()
 
 #dimensiones de la pantalla del juego
-dimensiones_pantalla = (1280, 720)
-pantalla = pygame.display.set_mode(dimensiones_pantalla)
+dimX_vent = 1280
+dimY_vent = 720
+pantalla = pygame.display.set_mode((dimX_vent, dimY_vent))
 
 #función que halla la posición X de la imagen para
 #que quede centrado horizontalmente en la ventana
@@ -22,6 +23,9 @@ class administrador_de_ventanas():
         self.boton_instr = pygame.image.load("./assets/botones/instrucciones.png")
         self.boton_salir = pygame.image.load("./assets/botones/salir.png")
         self.boton_regresar = pygame.image.load("./assets/botones/regresar.png")
+
+        self.dimX_boton = 200
+        self.dimY_boton = 50
 
     def administrar(self):
         if self.ventana == 'menu':
@@ -45,33 +49,41 @@ class administrador_de_ventanas():
         self.salir_x()
 
         #posición X de los botones del menú
-        posX_botones_menu = centrar_hztl(dimensiones_pantalla[0], 200)
+        posX = centrar_hztl(dimX_vent, self.dimX_boton)
+
+        posY_jugar = 300
+        posY_instr = 400
+        posY_salir = 500
 
         pantalla.fill((0,0,0))
         #agrega las imágenes previamente cargadas al menú
-        pantalla.blit(self.boton_jugar, (posX_botones_menu, 300))
-        pantalla.blit(self.boton_instr, (posX_botones_menu, 400))
-        pantalla.blit(self.boton_salir, (posX_botones_menu, 500))
+        pantalla.blit(self.boton_jugar, (posX, posY_jugar))
+        pantalla.blit(self.boton_instr, (posX, posY_instr))
+        pantalla.blit(self.boton_salir, (posX, posY_salir))
 
         pygame.display.update()
         if pygame.mouse.get_pressed()[0] == True:
-            if posX_botones_menu <= pygame.mouse.get_pos()[0] <= posX_botones_menu + 200:
-                if 300 <= pygame.mouse.get_pos()[1] <= 300 + 50:
+            if posX <= pygame.mouse.get_pos()[0] <= posX + self.dimX_boton:
+                if posY_jugar <= pygame.mouse.get_pos()[1] <= posY_jugar + self.dimY_boton:
                     self.ventana = 'preparacion'
 
-                if 500 <= pygame.mouse.get_pos()[1] <= 500 + 50:
+                if posY_salir <= pygame.mouse.get_pos()[1] <= posY_salir + self.dimY_boton:
                     self.salir_menu()
 
     def preparacion(self):
         self.salir_x()
 
         pantalla.fill((0,0,0))
-        pantalla.blit(self.boton_regresar, (900, 600))
+
+        posX_regresar = 1000
+        posY_regresar = 600
+
+        pantalla.blit(self.boton_regresar, (posX_regresar, posY_regresar))
         pygame.display.update()
 
         if pygame.mouse.get_pressed()[0] == True:
-            if 900 <= pygame.mouse.get_pos()[0] <= 900 + 200:
-                if 600 <= pygame.mouse.get_pos()[1] <= 600 + 50:
+            if posX_regresar <= pygame.mouse.get_pos()[0] <= posX_regresar + self.dimX_boton:
+                if posY_regresar <= pygame.mouse.get_pos()[1] <= posY_regresar + self.dimY_boton:
                     self.ventana = 'menu'
 
 
