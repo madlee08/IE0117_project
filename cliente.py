@@ -21,7 +21,7 @@ class administrador_de_ventanas():
         self.boton_jugar = pygame.image.load("./assets/botones/jugar.png")
         self.boton_instr = pygame.image.load("./assets/botones/instrucciones.png")
         self.boton_salir = pygame.image.load("./assets/botones/salir.png")
-        self.boton_salir = pygame.image.load("./assets/botones/regresar.png")
+        self.boton_regresar = pygame.image.load("./assets/botones/regresar.png")
 
     def administrar(self):
         if self.ventana == 'menu':
@@ -66,8 +66,13 @@ class administrador_de_ventanas():
         self.salir_x()
 
         pantalla.fill((0,0,0))
-
+        pantalla.blit(self.boton_regresar, (900, 600))
         pygame.display.update()
+
+        if pygame.mouse.get_pressed()[0] == True:
+            if 900 <= pygame.mouse.get_pos()[0] <= 900 + 200:
+                if 600 <= pygame.mouse.get_pos()[1] <= 600 + 50:
+                    self.ventana = 'menu'
 
 
 #programa principal
