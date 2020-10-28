@@ -21,10 +21,13 @@ class administrador_de_ventanas():
         self.boton_jugar = pygame.image.load("./assets/botones/jugar.png")
         self.boton_instr = pygame.image.load("./assets/botones/instrucciones.png")
         self.boton_salir = pygame.image.load("./assets/botones/salir.png")
+        self.boton_salir = pygame.image.load("./assets/botones/regresar.png")
 
     def administrar(self):
         if self.ventana == 'menu':
             self.menu()
+        if self.ventana == 'preparacion':
+            self.preparacion()
 
     def salir_x(self):
         for event in pygame.event.get():
@@ -44,6 +47,7 @@ class administrador_de_ventanas():
         #posición X de los botones del menú
         posX_botones_menu = centrar_hztl(dimensiones_pantalla[0], 200)
 
+        pantalla.fill((0,0,0))
         #agrega las imágenes previamente cargadas al menú
         pantalla.blit(self.boton_jugar, (posX_botones_menu, 300))
         pantalla.blit(self.boton_instr, (posX_botones_menu, 400))
@@ -52,8 +56,19 @@ class administrador_de_ventanas():
         pygame.display.update()
         if pygame.mouse.get_pressed()[0] == True:
             if posX_botones_menu <= pygame.mouse.get_pos()[0] <= posX_botones_menu + 200:
+                if 300 <= pygame.mouse.get_pos()[1] <= 300 + 50:
+                    self.ventana = 'preparacion'
+
                 if 500 <= pygame.mouse.get_pos()[1] <= 500 + 50:
                     self.salir_menu()
+
+    def preparacion(self):
+        self.salir_x()
+
+        pantalla.fill((0,0,0))
+
+        pygame.display.update()
+
 
 #programa principal
 ventana = administrador_de_ventanas()
