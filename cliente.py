@@ -18,43 +18,44 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 class administrador_de_ventanas():
     def __init__(self):
         self.ventana = 'menu'
+        self.boton_jugar = pygame.image.load("./assets/botones/jugar.png")
+        self.boton_instr = pygame.image.load("./assets/botones/instrucciones.png")
+        self.boton_salir = pygame.image.load("./assets/botones/salir.png")
 
     def administrar(self):
         if self.ventana == 'menu':
             self.menu()
 
-    def menu(self):
-        #cierra el juego si presiona X de la ventana
+    def salir_x(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 print("juego cerrado")
                 pygame.quit()
                 sys.exit()
-        
-        #carga las siguientes imágenes
-        boton_jugar = pygame.image.load("./assets/botones/jugar.png")
-        boton_instr = pygame.image.load("./assets/botones/instrucciones.png")
-        boton_salir = pygame.image.load("./assets/botones/salir.png")
+
+    def salir_menu(self):
+        pygame.quit()
+        sys.exit()
+
+    def menu(self):
+        #cierra el juego si presiona X de la ventana
+        self.salir_x()
 
         #posición X de los botones del menú
         posX_botones_menu = centrar_hztl(dimensiones_pantalla[0], 200)
 
         #agrega las imágenes previamente cargadas al menú
-        pantalla.blit(boton_jugar, (posX_botones_menu, 300))
-        pantalla.blit(boton_instr, (posX_botones_menu, 400))
-        pantalla.blit(boton_salir, (posX_botones_menu, 500))
+        pantalla.blit(self.boton_jugar, (posX_botones_menu, 300))
+        pantalla.blit(self.boton_instr, (posX_botones_menu, 400))
+        pantalla.blit(self.boton_salir, (posX_botones_menu, 500))
 
         pygame.display.update()
         if pygame.mouse.get_pressed()[0] == True:
             if posX_botones_menu <= pygame.mouse.get_pos()[0] <= posX_botones_menu + 200:
                 if 500 <= pygame.mouse.get_pos()[1] <= 500 + 50:
-                    self.salir()
-
-    def salir(self):
-        pygame.quit()
-        sys.exit()
+                    self.salir_menu()
 
 #programa principal
+ventana = administrador_de_ventanas()
 while True:
-    ventana = administrador_de_ventanas()
     ventana.administrar()
