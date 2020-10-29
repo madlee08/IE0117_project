@@ -1,5 +1,4 @@
-import sys
-import pygame
+import pygame, sys, time
 
 print("juego iniciado")
 pygame.init()
@@ -25,6 +24,9 @@ class administrador_de_ventanas():
         self.boton_regresar = pygame.image.load("./assets/botones/regresar.png")
 
         self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
+
+        self.barco1_x2 = pygame.image.load("./assets/barcos/1_x2.png")
+        self.rot1 = False
 
         self.dimX_boton = 200
         self.dimY_boton = 50
@@ -78,21 +80,40 @@ class administrador_de_ventanas():
         self.salir_x()
 
         pantalla.fill(self.negro)
-
+        
         posX_regresar = 1000
         posY_regresar = 600
 
         pantalla.blit(self.boton_regresar, (posX_regresar, posY_regresar))
         pantalla.blit(self.tablero, (50, 50))
+        
+        if self.rot1 == True:
+            pantalla.blit(pygame.transform.rotate(self.barco1_x2, 90), (50,50))
+            pygame.display.update()
 
-        pygame.display.update()
+            if pygame.mouse.get_pressed()[0] == True:
+                if 50 <= pygame.mouse.get_pos()[0] <= 100:
+                    if 50 <= pygame.mouse.get_pos()[1] <= 100:
+                        self.rot1 = False
+                        time.sleep(0.25)
+            
+        else:
+            pantalla.blit(self.barco1_x2, (50,50))
+            pygame.display.update()
+
+            if pygame.mouse.get_pressed()[0] == True:
+                if 50 <= pygame.mouse.get_pos()[0] <= 100:
+                    if 50 <= pygame.mouse.get_pos()[1] <= 100:
+                        self.rot1 = True
+                        time.sleep(0.25)
+            
 
         if pygame.mouse.get_pressed()[0] == True:
             if posX_regresar <= pygame.mouse.get_pos()[0] <= posX_regresar + self.dimX_boton:
                 if posY_regresar <= pygame.mouse.get_pos()[1] <= posY_regresar + self.dimY_boton:
                     self.ventana = 'menu'
 
-
+       
 #programa principal
 ventana = administrador_de_ventanas()
 while True:
