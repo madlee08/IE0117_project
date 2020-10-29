@@ -24,8 +24,12 @@ class administrador_de_ventanas():
         self.boton_salir = pygame.image.load("./assets/botones/salir.png")
         self.boton_regresar = pygame.image.load("./assets/botones/regresar.png")
 
+        self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
+
         self.dimX_boton = 200
         self.dimY_boton = 50
+
+        self.negro = (0,0,0)
 
     def administrar(self):
         if self.ventana == 'menu':
@@ -55,7 +59,7 @@ class administrador_de_ventanas():
         posY_instr = 400
         posY_salir = 500
 
-        pantalla.fill((0,0,0))
+        pantalla.fill(self.negro)
         #agrega las imágenes previamente cargadas al menú
         pantalla.blit(self.boton_jugar, (posX, posY_jugar))
         pantalla.blit(self.boton_instr, (posX, posY_instr))
@@ -73,12 +77,14 @@ class administrador_de_ventanas():
     def preparacion(self):
         self.salir_x()
 
-        pantalla.fill((0,0,0))
+        pantalla.fill(self.negro)
 
         posX_regresar = 1000
         posY_regresar = 600
 
         pantalla.blit(self.boton_regresar, (posX_regresar, posY_regresar))
+        pantalla.blit(self.tablero, (50, 50))
+
         pygame.display.update()
 
         if pygame.mouse.get_pressed()[0] == True:
