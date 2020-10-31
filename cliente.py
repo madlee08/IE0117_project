@@ -15,7 +15,74 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 
 #clase que se encarga de administrar las distintas pantallas
 #que se van a mostrar cuando el usuario presiona un botón
-class administrador_de_ventanas():
+class administrador_de_barcos:
+    def __init__(self):
+        self.barco0 = pygame.image.load("./assets/barcos/0_x2.png")
+        self.barco1 = pygame.image.load("./assets/barcos/1_x3.png")
+        self.barco2 = pygame.image.load("./assets/barcos/2_x3.png")
+        self.barco3 = pygame.image.load("./assets/barcos/3_x4.png")
+        self.barco4 = pygame.image.load("./assets/barcos/4_x5.png")
+
+        self.pX_barco = [50, 50, 50, 50, 242]
+        self.pY_barco = [50, 146, 242, 338, 146]
+        
+        self.dX_barco = [93, 141, 141, 189, 237]
+        self.dY_barco = [45, 45, 45, 45, 45]
+
+        self.rotado_barco = [False, False, False, False, True]
+
+    def ubicar(self):
+        if self.rotado_barco[0] == True:
+            rotado0 = pygame.transform.rotate(self.barco0, 90)
+            pantalla.blit(rotado0, (self.pX_barco[0], self.pY_barco[0]))
+
+        else:
+            pantalla.blit(self.barco0, (self.pX_barco[0], self.pY_barco[0]))
+        
+        if self.rotado_barco[1] == True:
+            rotado1 = pygame.transform.rotate(self.barco1, 90)
+            pantalla.blit(rotado1, (self.pX_barco[1], self.pY_barco[1]))
+
+        else:
+            pantalla.blit(self.barco1, (self.pX_barco[1], self.pY_barco[1]))
+        
+        if self.rotado_barco[2] == True:
+            rotado2 = pygame.transform.rotate(self.barco2, 90)
+            pantalla.blit(rotado2, (self.pX_barco[2], self.pY_barco[2]))
+
+        else:
+            pantalla.blit(self.barco2, (self.pX_barco[2], self.pY_barco[2]))
+
+        if self.rotado_barco[3] == True:
+            rotado3 = pygame.transform.rotate(self.barco3, 90)
+            pantalla.blit(rotado3, (self.pX_barco[3], self.pY_barco[3]))
+
+        else:
+            pantalla.blit(self.barco3, (self.pX_barco[3], self.pY_barco[3]))
+
+        if self.rotado_barco[4] == True:
+            rotado4 = pygame.transform.rotate(self.barco4, 90)
+            pantalla.blit(rotado4, (self.pX_barco[4], self.pY_barco[4]))
+
+        else:
+            pantalla.blit(self.barco4, (self.pX_barco[4], self.pY_barco[4]))
+
+        pygame.display.update()
+    def rotar(self):
+        if pygame.mouse.get_pressed()[2] == True:
+            if self.rotado_barco[0] == True:
+                if self.pX_barco[0] <= pygame.mouse.get_pos()[0] <= self.pX_barco[0] + self.dY_barco[0]:
+                    if self.pY_barco[0] <= pygame.mouse.get_pos()[1] <= self.pY_barco[0] + self.dX_barco[0]:
+                        self.rotado_barco[0] = False
+                        time.sleep(0.25)
+
+            else:
+                if self.pX_barco[0] <= pygame.mouse.get_pos()[0] <= self.pX_barco[0] + self.dX_barco[0]:
+                    if self.pY_barco[0] <= pygame.mouse.get_pos()[1] <= self.pY_barco[0] + self.dY_barco[0]:
+                        self.rotado_barco[0] = True
+                        time.sleep(0.25)
+
+class administrador_de_ventanas:
     def __init__(self):
         self.ventana = 'menu'
         self.btn_jugar = pygame.image.load("./assets/botones/jugar.png")
@@ -23,11 +90,8 @@ class administrador_de_ventanas():
         self.btn_salir = pygame.image.load("./assets/botones/salir.png")
         self.btn_regsr = pygame.image.load("./assets/botones/regresar.png")
         self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
-        self.barco0 = pygame.image.load("./assets/barcos/0_x2.png")
-        self.barco1 = pygame.image.load("./assets/barcos/1_x3.png")
-        self.barco2 = pygame.image.load("./assets/barcos/2_x3.png")
-        self.barco3 = pygame.image.load("./assets/barcos/3_x4.png")
-        self.barco4 = pygame.image.load("./assets/barcos/4_x5.png")
+
+        self.barcos = administrador_de_barcos()
 
         self.dX_boton = 200
         self.dY_boton = 50
@@ -42,14 +106,6 @@ class administrador_de_ventanas():
 
         self.pX_regsr = 1000
         self.pY_regsr = 600
-        
-        self.pX_barco = [50, 50, 50, 50, 242]
-        self.pY_barco = [50, 146, 242, 338, 146]
-        
-        self.dX_barco = [93, 141, 141, 189, 237]
-        self.dY_barco = [45, 45, 45, 45, 45]
-
-        self.rotado_barco = [False, False, False, False, True]
 
         self.negro = (0,0,0)
 
@@ -98,64 +154,13 @@ class administrador_de_ventanas():
 
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
         pantalla.blit(self.tablero, (self.pX_tablero, self.pY_tablero))
-        self.ubicarbarcos()
-        self.rotarbarcos()
+        self.barcos.ubicar()
+        self.barcos.rotar()
 
         if pygame.mouse.get_pressed()[0] == True:
             if self.pX_regsr <= pygame.mouse.get_pos()[0] <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pygame.mouse.get_pos()[1] <= self.pY_regsr + self.dY_boton:
                     self.ventana = 'menu'
-
-    def ubicarbarcos(self):
-        if self.rotado_barco[0] == True:
-            rotado0 = pygame.transform.rotate(self.barco0, 90)
-            pantalla.blit(rotado0, (self.pX_barco[0], self.pY_barco[0]))
-
-        else:
-            pantalla.blit(self.barco0, (self.pX_barco[0], self.pY_barco[0]))
-        
-        if self.rotado_barco[1] == True:
-            rotado1 = pygame.transform.rotate(self.barco1, 90)
-            pantalla.blit(rotado1, (self.pX_barco[1], self.pY_barco[1]))
-
-        else:
-            pantalla.blit(self.barco1, (self.pX_barco[1], self.pY_barco[1]))
-        
-        if self.rotado_barco[2] == True:
-            rotado2 = pygame.transform.rotate(self.barco2, 90)
-            pantalla.blit(rotado2, (self.pX_barco[2], self.pY_barco[2]))
-
-        else:
-            pantalla.blit(self.barco2, (self.pX_barco[2], self.pY_barco[2]))
-
-        if self.rotado_barco[3] == True:
-            rotado3 = pygame.transform.rotate(self.barco3, 90)
-            pantalla.blit(rotado3, (self.pX_barco[3], self.pY_barco[3]))
-
-        else:
-            pantalla.blit(self.barco3, (self.pX_barco[3], self.pY_barco[3]))
-
-        if self.rotado_barco[4] == True:
-            rotado4 = pygame.transform.rotate(self.barco4, 90)
-            pantalla.blit(rotado4, (self.pX_barco[4], self.pY_barco[4]))
-
-        else:
-            pantalla.blit(self.barco4, (self.pX_barco[4], self.pY_barco[4]))
-
-        pygame.display.update()
-    def rotarbarcos(self):
-        if pygame.mouse.get_pressed()[2] == True:
-            if self.rotado_barco[0] == True:
-                if self.pX_barco[0] <= pygame.mouse.get_pos()[0] <= self.pX_barco[0] + self.dY_barco[0]:
-                    if self.pY_barco[0] <= pygame.mouse.get_pos()[1] <= self.pY_barco[0] + self.dX_barco[0]:
-                        self.rotado_barco[0] = False
-                        time.sleep(0.25)
-
-            else:
-                if self.pX_barco[0] <= pygame.mouse.get_pos()[0] <= self.pX_barco[0] + self.dX_barco[0]:
-                    if self.pY_barco[0] <= pygame.mouse.get_pos()[1] <= self.pY_barco[0] + self.dY_barco[0]:
-                        self.rotado_barco[0] = True
-                        time.sleep(0.25)
 
 #programa principal
 ventana = administrador_de_ventanas()
