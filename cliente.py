@@ -1,32 +1,47 @@
 import pygame, sys, time
 
+
 print("juego iniciado")
 pygame.init()
 
+
 #dimensiones de la pantalla del juego
-dimX_vent = 1280
-dimY_vent = 720
-pantalla = pygame.display.set_mode((dimX_vent, dimY_vent))
+dX_vent = 1280
+dY_vent = 720
+pantalla = pygame.display.set_mode((dX_vent, dY_vent))
+
 
 #función que halla la posición X de la imagen para
 #que quede centrado horizontalmente en la ventana
 def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
     return (dimensionX_pantalla - dimensionX_imagen)/2
 
-class administrador_de_boton_imagen:
+class administrador_de_imagenes:
+    def __init__(self):
+        self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
+        self.pX_tablero = 50
+        self.pY_tablero = 50
+        self.negro = (0,0,0)
+    
+    def menu(self):
+        pantalla.fill(self.negro)
+    
+    def preparacion(self):
+        pantalla.fill(self.negro)
+        pantalla.blit(self.tablero, (self.pX_tablero, self.pY_tablero))
+
+class administrador_de_botones:
     def __init__(self):
         self.out = 'menu'
         self.btn_jugar = pygame.image.load("./assets/botones/jugar.png")
         self.btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
         self.btn_salir = pygame.image.load("./assets/botones/salir.png")
         self.btn_regsr = pygame.image.load("./assets/botones/regresar.png")
-        self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
-        self.negro = (0,0,0)
 
         self.dX_boton = 200
         self.dY_boton = 50
 
-        self.pX_bmen = centrar_hztl(dimX_vent, self.dX_boton)
+        self.pX_bmen = centrar_hztl(dX_vent, self.dX_boton)
         self.pY_jugar = 300
         self.pY_instr = 400
         self.pY_salir = 500
@@ -34,15 +49,10 @@ class administrador_de_boton_imagen:
         self.pX_regsr = 1000
         self.pY_regsr = 600
 
-        self.pX_tablero = 50
-        self.pY_tablero = 50
-
     def menu(self):
-        pantalla.fill(self.negro)
         pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
         pantalla.blit(self.btn_instr, (self.pX_bmen, self.pY_instr))
         pantalla.blit(self.btn_salir, (self.pX_bmen, self.pY_salir))
-        pygame.display.update()
 
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
@@ -57,9 +67,7 @@ class administrador_de_boton_imagen:
                     self.out = 'salir'
 
     def preparacion(self):
-        pantalla.fill(self.negro)
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
-        pantalla.blit(self.tablero, (self.pX_tablero, self.pY_tablero))
 
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
@@ -69,6 +77,7 @@ class administrador_de_boton_imagen:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
                     self.out = 'menu'
+
 
 class administrador_de_barcos:
     def __init__(self):
@@ -96,8 +105,6 @@ class administrador_de_barcos:
             else:
                 pantalla.blit(self.barco[i], (self.pX[i], self.pY[i]))
 
-        pygame.display.update()
-
     def rotar(self):
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
@@ -121,8 +128,7 @@ class administrador_de_barcos:
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
         clic_izq = pygame.mouse.get_pressed()[0]
-        # for event in pygame.event.get():
-        #     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
         if clic_izq == True:
             for i in range(5):
                 if self.rotado[i] == True:
@@ -181,7 +187,8 @@ class administrador_de_barcos:
 class administrador_de_ventanas:
     def __init__(self):
         self.ventana = 'menu'
-        self.botones = administrador_de_boton_imagen()
+        self.imagenes_fondo = administrador_de_imagenes()
+        self.botones = administrador_de_botones()
         self.barcos = administrador_de_barcos()
 
     def administrar(self):
@@ -205,18 +212,23 @@ class administrador_de_ventanas:
 
     def menu(self):
         self.salir_x()
+        self.imagenes_fondo.menu()
         self.botones.menu()
+        pygame.display.update()
         self.ventana = self.botones.out
 
     def preparacion(self):
         self.salir_x()
+        self.imagenes_fondo.preparacion()
         self.botones.preparacion()
         self.barcos.ubicar()
         self.barcos.rotar()
         self.barcos.trasladar()
         self.barcos.limitar()
         self.barcos.ajustar()
+        pygame.display.update()
         self.ventana = self.botones.out
+
 
 #programa principal
 ventana = administrador_de_ventanas()
