@@ -168,115 +168,28 @@ class administrador_de_barcos:
         olim_sup = [434, 386, 386, 338, 290]
         plim_sup = 482
 
-        if self.rotado[0] == True:
-            if self.pX[0] < lim_inf:
-                self.pX[0] = lim_inf
-            if self.pX[0] > plim_sup:
-                self.pX[0] = plim_sup
+        for i in range(5):
+            if self.rotado[i] == True:
+                if self.pX[i] < lim_inf:
+                    self.pX[i] = lim_inf
+                if self.pX[i] > plim_sup:
+                    self.pX[i] = plim_sup
+                
+                if self.pY[i] < lim_inf:
+                    self.pY[i] = lim_inf
+                if self.pY[i] > olim_sup[i]:
+                    self.pY[i] = olim_sup[i]
             
-            if self.pY[0] < lim_inf:
-                self.pY[0] = lim_inf
-            if self.pY[0] > olim_sup[0]:
-                self.pY[0] = olim_sup[0]
-        
-        else:
-            if self.pX[0] < lim_inf:
-                self.pX[0] = lim_inf
-            if self.pX[0] > olim_sup[0]:
-                self.pX[0] = olim_sup[0]
+            else:
+                if self.pX[i] < lim_inf:
+                    self.pX[i] = lim_inf
+                if self.pX[i] > olim_sup[i]:
+                    self.pX[i] = olim_sup[i]
 
-            if self.pY[0] < lim_inf:
-                self.pY[0] = lim_inf
-            if self.pY[0] > plim_sup:
-                self.pY[0] = plim_sup
-        
-        if self.rotado[1] == True:
-            if self.pX[1] < lim_inf:
-                self.pX[1] = lim_inf
-            if self.pX[1] > plim_sup:
-                self.pX[1] = plim_sup
-            
-            if self.pY[1] < lim_inf:
-                self.pY[1] = lim_inf
-            if self.pY[1] > olim_sup[1]:
-                self.pY[1] = olim_sup[1]
-        
-        else:
-            if self.pX[1] < lim_inf:
-                self.pX[1] = lim_inf
-            if self.pX[1] > olim_sup[1]:
-                self.pX[1] = olim_sup[1]
-
-            if self.pY[1] < lim_inf:
-                self.pY[1] = lim_inf
-            if self.pY[1] > plim_sup:
-                self.pY[1] = plim_sup
-        
-        if self.rotado[2] == True:
-            if self.pX[2] < lim_inf:
-                self.pX[2] = lim_inf
-            if self.pX[2] > plim_sup:
-                self.pX[2] = plim_sup
-            
-            if self.pY[2] < lim_inf:
-                self.pY[2] = lim_inf
-            if self.pY[2] > olim_sup[2]:
-                self.pY[2] = olim_sup[2]
-        
-        else:
-            if self.pX[2] < lim_inf:
-                self.pX[2] = lim_inf
-            if self.pX[2] > olim_sup[2]:
-                self.pX[2] = olim_sup[2]
-
-            if self.pY[2] < lim_inf:
-                self.pY[2] = lim_inf
-            if self.pY[2] > plim_sup:
-                self.pY[2] = plim_sup
-        
-        if self.rotado[3] == True:
-            if self.pX[3] < lim_inf:
-                self.pX[3] = lim_inf
-            if self.pX[3] > plim_sup:
-                self.pX[3] = plim_sup
-            
-            if self.pY[3] < lim_inf:
-                self.pY[3] = lim_inf
-            if self.pY[3] > olim_sup[3]:
-                self.pY[3] = olim_sup[3]
-        
-        else:
-            if self.pX[3] < lim_inf:
-                self.pX[3] = lim_inf
-            if self.pX[3] > olim_sup[3]:
-                self.pX[3] = olim_sup[3]
-
-            if self.pY[3] < lim_inf:
-                self.pY[3] = lim_inf
-            if self.pY[3] > plim_sup:
-                self.pY[3] = plim_sup
-        
-        if self.rotado[4] == True:
-            if self.pX[4] < lim_inf:
-                self.pX[4] = lim_inf
-            if self.pX[4] > plim_sup:
-                self.pX[4] = plim_sup
-            
-            if self.pY[4] < lim_inf:
-                self.pY[4] = lim_inf
-            if self.pY[4] > olim_sup[4]:
-                self.pY[4] = olim_sup[4]
-        
-        else:
-            if self.pX[4] < lim_inf:
-                self.pX[4] = lim_inf
-            if self.pX[4] > olim_sup[4]:
-                self.pX[4] = olim_sup[4]
-
-            if self.pY[4] < lim_inf:
-                self.pY[4] = lim_inf
-            if self.pY[4] > plim_sup:
-                self.pY[4] = plim_sup
+                if self.pY[i] < lim_inf:
+                    self.pY[i] = lim_inf
+                if self.pY[i] > plim_sup:
+                    self.pY[i] = plim_sup
 
     def ajustar(self):
         clic_izq = pygame.mouse.get_pressed()[0]
