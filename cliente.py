@@ -150,65 +150,18 @@ class administrador_de_barcos:
         # for event in pygame.event.get():
         #     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
         if clic_izq == True:
-            if self.rotado[0] == True:
-                if self.pX[0] <= pX_mouse <= self.pX[0] + self.dY[0]:
-                    if self.pY[0] <= pY_mouse <= self.pY[0] + self.dX[0]:
-                        self.pX[0] = pX_mouse - self.dY[0]/2
-                        self.pY[0] = pY_mouse - self.dX[0]/2
+            for i in range(5):
+                if self.rotado[i] == True:
+                    if self.pX[i] <= pX_mouse <= self.pX[i] + self.dY[i]:
+                        if self.pY[i] <= pY_mouse <= self.pY[i] + self.dX[i]:
+                            self.pX[i] = pX_mouse - self.dY[i]/2
+                            self.pY[i] = pY_mouse - self.dX[i]/2
 
-            else:
-                if self.pX[0] <= pX_mouse <= self.pX[0] + self.dX[0]:
-                    if self.pY[0] <= pY_mouse <= self.pY[0] + self.dY[0]:
-                        self.pX[0] = pX_mouse - self.dX[0]/2
-                        self.pY[0] = pY_mouse - self.dY[0]/2
-            
-            if self.rotado[1] == True:
-                if self.pX[1] <= pX_mouse <= self.pX[1] + self.dY[1]:
-                    if self.pY[1] <= pY_mouse <= self.pY[1] + self.dX[1]:
-                        self.pX[1] = pX_mouse - self.dY[1]/2
-                        self.pY[1] = pY_mouse - self.dX[1]/2
-
-            else:
-                if self.pX[1] <= pX_mouse <= self.pX[1] + self.dX[1]:
-                    if self.pY[1] <= pY_mouse <= self.pY[1] + self.dY[1]:
-                        self.pX[1] = pX_mouse - self.dX[1]/2
-                        self.pY[1] = pY_mouse - self.dY[1]/2
-
-            if self.rotado[2] == True:
-                if self.pX[2] <= pX_mouse <= self.pX[2] + self.dY[2]:
-                    if self.pY[2] <= pY_mouse <= self.pY[2] + self.dX[2]:
-                        self.pX[2] = pX_mouse - self.dY[2]/2
-                        self.pY[2] = pY_mouse - self.dX[2]/2
-
-            else:
-                if self.pX[2] <= pX_mouse <= self.pX[2] + self.dX[2]:
-                    if self.pY[2] <= pY_mouse <= self.pY[2] + self.dY[2]:
-                        self.pX[2] = pX_mouse - self.dX[2]/2
-                        self.pY[2] = pY_mouse - self.dY[2]/2
-
-            if self.rotado[3] == True:
-                if self.pX[3] <= pX_mouse <= self.pX[3] + self.dY[3]:
-                    if self.pY[3] <= pY_mouse <= self.pY[3] + self.dX[3]:
-                        self.pX[3] = pX_mouse - self.dY[3]/2
-                        self.pY[3] = pY_mouse - self.dX[3]/2
-
-            else:
-                if self.pX[3] <= pX_mouse <= self.pX[3] + self.dX[3]:
-                    if self.pY[3] <= pY_mouse <= self.pY[3] + self.dY[3]:
-                        self.pX[3] = pX_mouse - self.dX[3]/2
-                        self.pY[3] = pY_mouse - self.dY[3]/2
-
-            if self.rotado[4] == True:
-                if self.pX[4] <= pX_mouse <= self.pX[4] + self.dY[4]:
-                    if self.pY[4] <= pY_mouse <= self.pY[4] + self.dX[4]:
-                        self.pX[4] = pX_mouse - self.dY[4]/2
-                        self.pY[4] = pY_mouse - self.dX[4]/2
-
-            else:
-                if self.pX[4] <= pX_mouse <= self.pX[4] + self.dX[4]:
-                    if self.pY[4] <= pY_mouse <= self.pY[4] + self.dY[4]:
-                        self.pX[4] = pX_mouse - self.dX[4]/2
-                        self.pY[4] = pY_mouse - self.dY[4]/2
+                else:
+                    if self.pX[i] <= pX_mouse <= self.pX[i] + self.dX[i]:
+                        if self.pY[i] <= pY_mouse <= self.pY[i] + self.dY[i]:
+                            self.pX[i] = pX_mouse - self.dX[i]/2
+                            self.pY[i] = pY_mouse - self.dY[i]/2
 
     def limitar(self):
         lim_inf = 50
@@ -336,8 +289,8 @@ class administrador_de_barcos:
 
                     if 50+47*i <= self.pY[j] <= 50 + 47*(i+1):
                         self.pY[j] = 50+48*i
-  
-        
+
+
 class administrador_de_ventanas:
     def __init__(self):
         self.ventana = 'menu'
