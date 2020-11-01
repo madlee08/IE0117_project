@@ -13,7 +13,7 @@ pantalla = pygame.display.set_mode((dimX_vent, dimY_vent))
 def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
     return (dimensionX_pantalla - dimensionX_imagen)/2
 
-class administrador_de_botones:
+class administrador_de_boton_imagen:
     def __init__(self):
         self.out = 'menu'
         self.btn_jugar = pygame.image.load("./assets/botones/jugar.png")
@@ -78,13 +78,13 @@ class administrador_de_barcos:
         self.barco3 = pygame.image.load("./assets/barcos/3_x4.png")
         self.barco4 = pygame.image.load("./assets/barcos/4_x5.png")
 
-        self.pX = [50, 290, 50, 50, 242]
-        self.pY = [50, 146, 242, 338, 146]
+        self.pX = [434, 50, 386, 338, 290]
+        self.pY = [434, 386, 386, 338, 290]
 
         self.dX = [93, 141, 141, 189, 237]
         self.dY = [45, 45, 45, 45, 45]
 
-        self.rotado = [False, False, False, False, True]
+        self.rotado = [False, False, False, False, False]
 
     def ubicar(self):
         if self.rotado[0] == True:
@@ -257,10 +257,126 @@ class administrador_de_barcos:
                         self.pX[4] = pX_mouse - self.dX[4]/2
                         self.pY[4] = pY_mouse - self.dY[4]/2
 
+    def limitar(self):
+        lim_inf = 50
+        olim_sup = [434, 386, 386, 338, 290]
+        plim_sup = 482
+
+        if self.rotado[0] == True:
+            if self.pX[0] < lim_inf:
+                self.pX[0] = lim_inf
+            if self.pX[0] > plim_sup:
+                self.pX[0] = plim_sup
+            
+            if self.pY[0] < lim_inf:
+                self.pY[0] = lim_inf
+            if self.pY[0] > olim_sup[0]:
+                self.pY[0] = olim_sup[0]
+        
+        else:
+            if self.pX[0] < lim_inf:
+                self.pX[0] = lim_inf
+            if self.pX[0] > olim_sup[0]:
+                self.pX[0] = olim_sup[0]
+
+            if self.pY[0] < lim_inf:
+                self.pY[0] = lim_inf
+            if self.pY[0] > plim_sup:
+                self.pY[0] = plim_sup
+        
+        if self.rotado[1] == True:
+            if self.pX[1] < lim_inf:
+                self.pX[1] = lim_inf
+            if self.pX[1] > plim_sup:
+                self.pX[1] = plim_sup
+            
+            if self.pY[1] < lim_inf:
+                self.pY[1] = lim_inf
+            if self.pY[1] > olim_sup[1]:
+                self.pY[1] = olim_sup[1]
+        
+        else:
+            if self.pX[1] < lim_inf:
+                self.pX[1] = lim_inf
+            if self.pX[1] > olim_sup[1]:
+                self.pX[1] = olim_sup[1]
+
+            if self.pY[1] < lim_inf:
+                self.pY[1] = lim_inf
+            if self.pY[1] > plim_sup:
+                self.pY[1] = plim_sup
+        
+        if self.rotado[2] == True:
+            if self.pX[2] < lim_inf:
+                self.pX[2] = lim_inf
+            if self.pX[2] > plim_sup:
+                self.pX[2] = plim_sup
+            
+            if self.pY[2] < lim_inf:
+                self.pY[2] = lim_inf
+            if self.pY[2] > olim_sup[2]:
+                self.pY[2] = olim_sup[2]
+        
+        else:
+            if self.pX[2] < lim_inf:
+                self.pX[2] = lim_inf
+            if self.pX[2] > olim_sup[2]:
+                self.pX[2] = olim_sup[2]
+
+            if self.pY[2] < lim_inf:
+                self.pY[2] = lim_inf
+            if self.pY[2] > plim_sup:
+                self.pY[2] = plim_sup
+        
+        if self.rotado[3] == True:
+            if self.pX[3] < lim_inf:
+                self.pX[3] = lim_inf
+            if self.pX[3] > plim_sup:
+                self.pX[3] = plim_sup
+            
+            if self.pY[3] < lim_inf:
+                self.pY[3] = lim_inf
+            if self.pY[3] > olim_sup[3]:
+                self.pY[3] = olim_sup[3]
+        
+        else:
+            if self.pX[3] < lim_inf:
+                self.pX[3] = lim_inf
+            if self.pX[3] > olim_sup[3]:
+                self.pX[3] = olim_sup[3]
+
+            if self.pY[3] < lim_inf:
+                self.pY[3] = lim_inf
+            if self.pY[3] > plim_sup:
+                self.pY[3] = plim_sup
+        
+        if self.rotado[4] == True:
+            if self.pX[4] < lim_inf:
+                self.pX[4] = lim_inf
+            if self.pX[4] > plim_sup:
+                self.pX[4] = plim_sup
+            
+            if self.pY[4] < lim_inf:
+                self.pY[4] = lim_inf
+            if self.pY[4] > olim_sup[4]:
+                self.pY[4] = olim_sup[4]
+        
+        else:
+            if self.pX[4] < lim_inf:
+                self.pX[4] = lim_inf
+            if self.pX[4] > olim_sup[4]:
+                self.pX[4] = olim_sup[4]
+
+            if self.pY[4] < lim_inf:
+                self.pY[4] = lim_inf
+            if self.pY[4] > plim_sup:
+                self.pY[4] = plim_sup
+
+        
 class administrador_de_ventanas:
     def __init__(self):
         self.ventana = 'menu'
-        self.botones = administrador_de_botones()
+        self.botones = administrador_de_boton_imagen()
         self.barcos = administrador_de_barcos()
 
     def administrar(self):
@@ -293,6 +409,7 @@ class administrador_de_ventanas:
         self.barcos.ubicar()
         self.barcos.rotar()
         self.barcos.trasladar()
+        self.barcos.limitar()
         self.ventana = self.botones.out
 
 #programa principal
