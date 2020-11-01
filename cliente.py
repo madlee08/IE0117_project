@@ -372,6 +372,18 @@ class administrador_de_barcos:
             if self.pY[4] > plim_sup:
                 self.pY[4] = plim_sup
 
+    def ajustar(self):
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == False:
+            for i in range(10):
+                for j in range(5):
+                    if 50+47*i <= self.pX[j] <= 50 + 47*(i+1):
+                        self.pX[j] = 50+48*i
+
+                    if 50+47*i <= self.pY[j] <= 50 + 47*(i+1):
+                        self.pY[j] = 50+48*i
+  
         
 class administrador_de_ventanas:
     def __init__(self):
@@ -410,6 +422,7 @@ class administrador_de_ventanas:
         self.barcos.rotar()
         self.barcos.trasladar()
         self.barcos.limitar()
+        self.barcos.ajustar()
         self.ventana = self.botones.out
 
 #programa principal
