@@ -19,16 +19,29 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 class administrador_de_imagenes:
     def __init__(self):
         self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
+        self.ayuda = pygame.image.load("./assets/texto/ayuda.png")
+        self.instr = pygame.image.load("./assets/texto/instrucciones.png")
         self.pX_tablero = 50
         self.pY_tablero = 50
-        self.negro = (0,0,0)
+        self.pX_ayuda = 750
+        self.pY_ayuda = 100
+        self.pX_instr = 160
+        self.pY_instr = 50
+
+        self.azul = (0 ,88,122)
     
     def menu(self):
-        pantalla.fill(self.negro)
+        pantalla.fill(self.azul)
     
     def preparacion(self):
-        pantalla.fill(self.negro)
+        pantalla.fill(self.azul)
         pantalla.blit(self.tablero, (self.pX_tablero, self.pY_tablero))
+        pantalla.blit(self.ayuda, (self.pX_ayuda, self.pY_ayuda))
+
+    def instrucciones(self):
+        pantalla.fill(self.azul)
+        pantalla.blit(self.instr, (self.pX_instr, self.pY_instr))
+
 
 class administrador_de_botones:
     def __init__(self):
@@ -37,6 +50,7 @@ class administrador_de_botones:
         self.btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
         self.btn_salir = pygame.image.load("./assets/botones/salir.png")
         self.btn_regsr = pygame.image.load("./assets/botones/regresar.png")
+        self.btn_bscar = pygame.image.load("./assets/botones/buscar.png")
 
         self.dX_boton = 200
         self.dY_boton = 50
@@ -48,6 +62,9 @@ class administrador_de_botones:
 
         self.pX_regsr = 1000
         self.pY_regsr = 600
+
+        self.pX_bscar = 750
+        self.pY_bscar = 600
 
     def menu(self):
         pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
@@ -63,11 +80,15 @@ class administrador_de_botones:
                 if self.pY_jugar <= pY_mouse <= self.pY_jugar + self.dY_boton:
                     self.out = 'preparacion'
 
+                if self.pY_instr <= pY_mouse <= self.pY_instr + self.dY_boton:
+                    self.out = 'instrucciones'
+
                 if self.pY_salir <= pY_mouse <= self.pY_salir + self.dY_boton:
                     self.out = 'salir'
 
     def preparacion(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
+        pantalla.blit(self.btn_bscar, (self.pX_bscar, self.pY_bscar))
 
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
@@ -78,6 +99,17 @@ class administrador_de_botones:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
                     self.out = 'menu'
 
+    def instrucciones(self):
+        pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
+
+        pX_mouse = pygame.mouse.get_pos()[0]
+        pY_mouse = pygame.mouse.get_pos()[1]
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == True:
+            if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
+                if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
+                    self.out = 'menu'
 
 class administrador_de_barcos:
     def __init__(self):
@@ -196,6 +228,8 @@ class administrador_de_ventanas:
             self.menu()
         if self.ventana == 'preparacion':
             self.preparacion()
+        if self.ventana == 'instrucciones':
+            self.instrucciones()
         if self.ventana == 'salir':
             self.salir_menu()
 
@@ -226,6 +260,13 @@ class administrador_de_ventanas:
         self.barcos.trasladar()
         self.barcos.limitar()
         self.barcos.ajustar()
+        pygame.display.update()
+        self.ventana = self.botones.out
+    
+    def instrucciones(self):
+        self.salir_x()
+        self.imagenes_fondo.instrucciones()
+        self.botones.instrucciones()
         pygame.display.update()
         self.ventana = self.botones.out
 
