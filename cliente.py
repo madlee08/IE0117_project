@@ -19,16 +19,21 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 class administrador_de_imagenes:
     def __init__(self):
         self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
+        self.ayuda = pygame.image.load("./assets/texto/ayuda.png")
         self.pX_tablero = 50
         self.pY_tablero = 50
-        self.negro = (0,0,0)
+        self.pX_ayuda = 750
+        self.pY_ayuda = 100
+
+        self.azul = (0 ,88,122)
     
     def menu(self):
-        pantalla.fill(self.negro)
+        pantalla.fill(self.azul)
     
     def preparacion(self):
-        pantalla.fill(self.negro)
+        pantalla.fill(self.azul)
         pantalla.blit(self.tablero, (self.pX_tablero, self.pY_tablero))
+        pantalla.blit(self.ayuda, (self.pX_ayuda, self.pY_ayuda))
 
 class administrador_de_botones:
     def __init__(self):
@@ -37,6 +42,7 @@ class administrador_de_botones:
         self.btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
         self.btn_salir = pygame.image.load("./assets/botones/salir.png")
         self.btn_regsr = pygame.image.load("./assets/botones/regresar.png")
+        self.btn_bscar = pygame.image.load("./assets/botones/buscar.png")
 
         self.dX_boton = 200
         self.dY_boton = 50
@@ -48,6 +54,9 @@ class administrador_de_botones:
 
         self.pX_regsr = 1000
         self.pY_regsr = 600
+
+        self.pX_bscar = 750
+        self.pY_bscar = 600
 
     def menu(self):
         pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
@@ -68,6 +77,7 @@ class administrador_de_botones:
 
     def preparacion(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
+        pantalla.blit(self.btn_bscar, (self.pX_bscar, self.pY_bscar))
 
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
