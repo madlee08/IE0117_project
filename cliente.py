@@ -19,7 +19,7 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 
 class administrador_de_botones:
     def __init__(self):
-        self.ventana = 'menu'
+        self.salida = 'menu'
         self.btn_jugar = pygame.image.load("./assets/botones/jugar.png")
         self.btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
         self.btn_salir = pygame.image.load("./assets/botones/salir.png")
@@ -52,13 +52,13 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_bmen <= pX_mouse <= self.pX_bmen + self.dX_boton:
                 if self.pY_jugar <= pY_mouse <= self.pY_jugar + self.dY_boton:
-                    self.ventana = 'preparacion'
+                    self.salida = 'preparacion'
 
                 if self.pY_instr <= pY_mouse <= self.pY_instr + self.dY_boton:
-                    self.ventana = 'instrucciones'
+                    self.salida = 'instrucciones'
 
                 if self.pY_salir <= pY_mouse <= self.pY_salir + self.dY_boton:
-                    self.ventana = 'salir'
+                    self.salida = 'salir'
 
     def preparacion(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -71,7 +71,7 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.ventana = 'menu'
+                    self.salida = 'menu'
 
     def instrucciones(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -83,26 +83,11 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.ventana = 'menu'
-    
-    def administrar(self):
-        if self.ventana == 'menu':
-            self.menu()
-
-        if self.ventana == 'preparacion':
-            self.preparacion()
-
-        if self.ventana == 'instrucciones':
-            self.instrucciones()
-    
-    def obt_vent(self):
-        return self.ventana
+                    self.salida = 'menu'
 
 
 class administrador_de_imagenes:
     def __init__(self):
-        self.ventana = 'menu'
-        self.botones = administrador_de_botones()
         self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
         self.ayuda = pygame.image.load("./assets/texto/ayuda.png")
         self.instr = pygame.image.load("./assets/texto/instrucciones.png")
@@ -117,28 +102,15 @@ class administrador_de_imagenes:
     
     def menu(self):
         pantalla.fill(self.azul)
-        self.ventana = self.botones.obt_vent()
     
     def preparacion(self):
         pantalla.fill(self.azul)
         pantalla.blit(self.tablero, (self.pX_tablero, self.pY_tablero))
         pantalla.blit(self.ayuda, (self.pX_ayuda, self.pY_ayuda))
-        self.ventana = self.botones.obt_vent()
 
     def instrucciones(self):
         pantalla.fill(self.azul)
         pantalla.blit(self.instr, (self.pX_instr, self.pY_instr))
-        self.ventana = self.botones.obt_vent()
-
-    def administrar(self):
-        if ventana == 'menu':
-            self.menu()
-
-        if ventana == 'preparacion':
-            self.preparacion()
-
-        if ventana == 'instrucciones':
-            self.instrucciones()
 
 
 class administrador_de_barcos:
@@ -272,28 +244,23 @@ class administrador_de_ventanas:
         sys.exit()
 
     def menu(self):
-        self.salir_x()
         self.imagenes.menu()
-        self.botones.administrar()
-        pygame.display.update()
-        self.ventana = self.botones.obt_vent()
+        self.botones.menu()
+        self.ventana = self.botones.salida
 
     def preparacion(self):
-        self.salir_x()
         self.imagenes.preparacion()
-        self.botones.administrar()
+        self.botones.preparacion()
         self.barcos.administrar()
-        pygame.display.update()
-        self.ventana = self.botones.obt_vent()
+        self.ventana = self.botones.salida
     
     def instrucciones(self):
-        self.salir_x()
         self.imagenes.instrucciones()
-        self.botones.administrar()
-        pygame.display.update()
-        self.ventana = self.botones.obt_vent()
+        self.botones.instrucciones()
+        self.ventana = self.botones.salida
 
     def administrar(self):
+        self.salir_x()
         if self.ventana == 'menu':
             self.menu()
 
@@ -310,3 +277,4 @@ class administrador_de_ventanas:
 ventana = administrador_de_ventanas()
 while True:
     ventana.administrar()
+    pygame.display.update()
