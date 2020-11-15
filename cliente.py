@@ -20,25 +20,26 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 class administrador_de_botones:
     def __init__(self):
         self.salida = 'menu'
-        self.btn_jugar = pygame.image.load("./assets/botones/jugar.png")
-        self.btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
-        self.btn_salir = pygame.image.load("./assets/botones/salir.png")
-        self.btn_regsr = pygame.image.load("./assets/botones/regresar.png")
-        self.btn_bscar = pygame.image.load("./assets/botones/buscar.png")
 
-        self.dX_boton = 200
-        self.dY_boton = 50
+    btn_jugar = pygame.image.load("./assets/botones/jugar.png")
+    btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
+    btn_salir = pygame.image.load("./assets/botones/salir.png")
+    btn_regsr = pygame.image.load("./assets/botones/regresar.png")
+    btn_bscar = pygame.image.load("./assets/botones/buscar.png")
 
-        self.pX_bmen = centrar_hztl(dX_vent, self.dX_boton)
-        self.pY_jugar = 300
-        self.pY_instr = 400
-        self.pY_salir = 500
+    dX_boton = 200
+    dY_boton = 50
 
-        self.pX_regsr = 1050
-        self.pY_regsr = 650
+    pX_bmen = centrar_hztl(dX_vent, dX_boton)
+    pY_jugar = 300
+    pY_instr = 400
+    pY_salir = 500
 
-        self.pX_bscar = 800
-        self.pY_bscar = 650
+    pX_regsr = 1050
+    pY_regsr = 650
+
+    pX_bscar = 800
+    pY_bscar = 650
 
     def menu(self):
         pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
@@ -104,19 +105,18 @@ class administrador_de_botones:
 
 
 class administrador_de_imagenes:
-    def __init__(self):
-        self.tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
-        self.tablero_b = pygame.image.load("./assets/tablero/tablero_blanco.png")
-        self.ayuda = pygame.image.load("./assets/texto/ayuda.png")
-        self.instr = pygame.image.load("./assets/texto/instrucciones.png")
-        self.pX_tablero = 50
-        self.pY_tablero = 50
-        self.pX_ayuda = 750
-        self.pY_ayuda = 100
-        self.pX_instr = 160
-        self.pY_instr = 50
+    tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
+    tablero_b = pygame.image.load("./assets/tablero/tablero_blanco.png")
+    ayuda = pygame.image.load("./assets/texto/ayuda.png")
+    instr = pygame.image.load("./assets/texto/instrucciones.png")
+    pX_tablero = 50
+    pY_tablero = 50
+    pX_ayuda = 750
+    pY_ayuda = 100
+    pX_instr = 160
+    pY_instr = 50
 
-        self.azul = (0 ,88,122)
+    azul = (0 ,88,122)
     
     def menu(self):
         pantalla.fill(self.azul)
@@ -137,35 +137,35 @@ class administrador_de_imagenes:
 
 
 class administrador_de_barcos:
-    def __init__(self):
-        self.b0 = pygame.image.load("./assets/barcos/0_x2.png")
-        self.b1 = pygame.image.load("./assets/barcos/1_x3.png")
-        self.b2 = pygame.image.load("./assets/barcos/2_x3.png")
-        self.b3 = pygame.image.load("./assets/barcos/3_x4.png")
-        self.b4 = pygame.image.load("./assets/barcos/4_x5.png")
 
-        self.barco = [self.b0, self.b1, self.b2, self.b3, self.b4]
+    b0 = pygame.image.load("./assets/barcos/0_x2.png")
+    b1 = pygame.image.load("./assets/barcos/1_x3.png")
+    b2 = pygame.image.load("./assets/barcos/2_x3.png")
+    b3 = pygame.image.load("./assets/barcos/3_x4.png")
+    b4 = pygame.image.load("./assets/barcos/4_x5.png")
 
-        self.fila0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila6 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila7 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila8 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        
-        self.matriz = [self.fila0, self.fila1, self.fila2, self.fila3, self.fila4, self.fila5, self.fila6, self.fila7, self.fila8, self.fila9]
+    barco = [b0, b1, b2, b3, b4]
 
-        self.pX = [434, 50, 386, 338, 290]
-        self.pY = [434, 386, 386, 338, 290]
+    fila0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila6 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila7 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila8 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    fila9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        self.dX = [93, 141, 141, 189, 237]
-        self.dY = [45, 45, 45, 45, 45]
+    matriz = [fila0, fila1, fila2, fila3, fila4, fila5, fila6, fila7, fila8, fila9]
 
-        self.rotado = [False, False, False, False, False]
+    pX = [434, 50, 386, 338, 290]
+    pY = [434, 386, 386, 338, 290]
+
+    dX = [93, 141, 141, 189, 237]
+    dY = [45, 45, 45, 45, 45]
+
+    rotado = [False, False, False, False, False]
 
     def ubicar(self):
         for i in range(5):
@@ -284,6 +284,7 @@ class administrador_de_barcos:
                     self.matriz[j][i] = 0
             #print temporal para ver que la matriz esté en orden
             print("{} ".format(self.matriz[j]))
+
 
 class administrador_de_ventanas:
     def __init__(self):
