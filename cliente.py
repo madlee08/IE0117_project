@@ -19,7 +19,7 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 
 class administrador_de_botones:
     def __init__(self):
-        self.salida = 'menu'
+        self.vent = 'menu'
 
     btn_jugar = pygame.image.load("./assets/botones/jugar.png")
     btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
@@ -53,13 +53,13 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_bmen <= pX_mouse <= self.pX_bmen + self.dX_boton:
                 if self.pY_jugar <= pY_mouse <= self.pY_jugar + self.dY_boton:
-                    self.salida = 'preparacion'
+                    self.vent = 'preparacion'
 
                 if self.pY_instr <= pY_mouse <= self.pY_instr + self.dY_boton:
-                    self.salida = 'instrucciones'
+                    self.vent = 'instrucciones'
 
                 if self.pY_salir <= pY_mouse <= self.pY_salir + self.dY_boton:
-                    self.salida = 'salir'
+                    self.vent = 'salir'
 
     def preparacion(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -72,11 +72,11 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.salida = 'menu'
+                    self.vent = 'menu'
             
             if self.pX_bscar <= pX_mouse <= self.pX_bscar + self.dX_boton:
                 if self.pY_bscar <= pY_mouse <= self.pY_bscar + self.dY_boton:
-                    self.salida = 'juego'
+                    self.vent = 'juego'
 
     def juego(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -88,7 +88,7 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.salida = 'preparacion'
+                    self.vent = 'preparacion'
                     time.sleep(0.2)
 
     def instrucciones(self):
@@ -101,7 +101,7 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.salida = 'menu'
+                    self.vent = 'menu'
 
 
 class administrador_de_imagenes:
@@ -288,7 +288,6 @@ class administrador_de_barcos:
 
 class administrador_de_ventanas:
     def __init__(self):
-        self.ventana = 'menu'
         self.imagenes = administrador_de_imagenes()
         self.botones = administrador_de_botones()
         self.barcos = administrador_de_barcos()
@@ -307,41 +306,41 @@ class administrador_de_ventanas:
     def menu(self):
         self.imagenes.menu()
         self.botones.menu()
-        self.ventana = self.botones.salida
+
 
     def preparacion(self):
         self.imagenes.preparacion()
         self.botones.preparacion()
         self.barcos.administrar()
-        self.ventana = self.botones.salida
+
 
     def juego(self):
         self.imagenes.juego()
         self.botones.juego()
         self.barcos.ubicar()
         self.barcos.rvs_celda()
-        self.ventana = self.botones.salida
+
     
     def instrucciones(self):
         self.imagenes.instrucciones()
         self.botones.instrucciones()
-        self.ventana = self.botones.salida
+
 
     def administrar(self):
         self.salir_x()
-        if self.ventana == 'menu':
+        if self.botones.vent == 'menu':
             self.menu()
 
-        if self.ventana == 'preparacion':
+        if self.botones.vent == 'preparacion':
             self.preparacion()
 
-        if self.ventana == 'instrucciones':
+        if self.botones.vent == 'instrucciones':
             self.instrucciones()
 
-        if self.ventana == 'juego':
+        if self.botones.vent == 'juego':
             self.juego()
 
-        if self.ventana == 'salir':
+        if self.botones.vent == 'salir':
             self.salir_menu()
 
 #programa principal
