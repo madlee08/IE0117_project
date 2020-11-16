@@ -1,4 +1,4 @@
-import pygame, sys, time
+import pygame, sys, time, socket
 
 
 print("juego iniciado")
@@ -20,12 +20,26 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 class administrador_de_botones:
     def __init__(self):
         self.vent = 'menu'
+        self.fila0 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila1 = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila2 = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+        self.fila3 = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+        self.fila4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila6 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila7 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila8 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+        self.tablero = [self.fila0, self.fila1, self.fila2, self.fila3, self.fila4, self.fila5, self.fila6, self.fila7, self.fila8, self.fila9]
 
     btn_jugar = pygame.image.load("./assets/botones/jugar.png")
     btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
     btn_salir = pygame.image.load("./assets/botones/salir.png")
     btn_regsr = pygame.image.load("./assets/botones/regresar.png")
     btn_bscar = pygame.image.load("./assets/botones/buscar.png")
+
+    actdo = pygame.image.load("./assets/tablero/acertado.png")
 
     dX_boton = 200
     dY_boton = 50
@@ -41,6 +55,8 @@ class administrador_de_botones:
     pX_bscar = 800
     pY_bscar = 650
 
+    pX_tablero = 600
+    pY_tablero = 50
     def menu(self):
         pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
         pantalla.blit(self.btn_instr, (self.pX_bmen, self.pY_instr))
@@ -89,7 +105,28 @@ class administrador_de_botones:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
                     self.vent = 'preparacion'
+                    for j in range(10):
+                        for i in range(10):
+                            self.tablero[j][i] = 0
                     time.sleep(0.2)
+
+    def clic(self):
+        pX_mouse = pygame.mouse.get_pos()[0]
+        pY_mouse = pygame.mouse.get_pos()[1]
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == True:
+            for j in range(10):
+                for i in range(10):
+                    if self.pX_tablero + 48*i <= pX_mouse <= self.pX_tablero + 48*(i+1):
+                        if self.pY_tablero + 48*j <= pY_mouse <= self.pY_tablero + 48*(j+1) :
+                            self.tablero[j][i] = 1
+
+    def actualizar_celda(self):
+        for j in range(10):
+                for i in range(10):
+                    if self.tablero[j][i] != 0:
+                            pantalla.blit(self.actdo, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
 
     def instrucciones(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -146,26 +183,27 @@ class administrador_de_barcos:
 
     barco = [b0, b1, b2, b3, b4]
 
-    fila0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila6 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila7 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila8 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    fila9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    def __init__(self):
+        self.fila0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila6 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila7 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila8 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.fila9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    matriz = [fila0, fila1, fila2, fila3, fila4, fila5, fila6, fila7, fila8, fila9]
+        self.tablero0 = [self.fila0, self.fila1, self.fila2, self.fila3, self.fila4, self.fila5, self.fila6, self.fila7, self.fila8, self.fila9]
 
-    pX = [434, 50, 386, 338, 290]
-    pY = [434, 386, 386, 338, 290]
+        self.pX = [434, 50, 386, 338, 290]
+        self.pY = [434, 386, 386, 338, 290]
 
-    dX = [93, 141, 141, 189, 237]
-    dY = [45, 45, 45, 45, 45]
+        self.dX = [93, 141, 141, 189, 237]
+        self.dY = [45, 45, 45, 45, 45]
 
-    rotado = [False, False, False, False, False]
+        self.rotado = [False, False, False, False, False]
 
     def ubicar(self):
         for i in range(5):
@@ -266,24 +304,32 @@ class administrador_de_barcos:
                 px_clr = pantalla.get_at((51+48*i, 51+48*j))
 
                 if px_clr == (1, 74, 7, 255):
-                    self.matriz[j][i] = 1
+                    self.tablero0[j][i] = 1
 
                 elif px_clr == (139, 85 , 8, 255):
-                    self.matriz[j][i] = 2
+                    self.tablero0[j][i] = 2
 
                 elif px_clr == (17, 89, 88, 255):
-                    self.matriz[j][i] = 3
+                    self.tablero0[j][i] = 3
 
                 elif px_clr == (140, 144, 13, 255):
-                    self.matriz[j][i] = 4
+                    self.tablero0[j][i] = 4
 
                 elif px_clr == (201, 95, 45, 255):
-                    self.matriz[j][i] = 5
+                    self.tablero0[j][i] = 5
 
                 else:
-                    self.matriz[j][i] = 0
+                    self.tablero0[j][i] = 0
             #print temporal para ver que la matriz esté en orden
-            print("{} ".format(self.matriz[j]))
+            # print("{} ".format(self.tablero0[j]))
+
+    def enviar(self):
+        cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            cliente.connect(('127.0.0.1', 8080))
+            cliente.send((str.encode(".".join(str(x) for x in self.tablero0))))
+        except socket.error:
+            pass
 
 
 class administrador_de_ventanas:
@@ -319,6 +365,9 @@ class administrador_de_ventanas:
         self.botones.juego()
         self.barcos.ubicar()
         self.barcos.rvs_celda()
+        # self.barcos.enviar()
+        self.botones.clic()
+        self.botones.actualizar_celda()
 
     
     def instrucciones(self):
