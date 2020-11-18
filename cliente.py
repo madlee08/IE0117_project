@@ -323,20 +323,40 @@ class administrador_de_barcos:
             #print temporal para ver que la matriz esté en orden
             # print("{} ".format(self.tablero0[j]))
 
-    def enviar(self):
-        cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            cliente.connect(('127.0.0.1', 8080))
-            cliente.send((str.encode(".".join(str(x) for x in self.tablero0))))
-        except socket.error:
-            pass
 
+class red:
+    def __init__(self):
+        self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.enviado = False
+        self.tablero = []
+
+    def copiar(self, de_tablero):
+        for i in range(10):
+            self.tablero.append(de_tablero[i])
+
+    def verificar(self, ventana):
+        if ventana != 'juego':
+            self.enviado = False
+
+    def conectar(self):
+        
+        if self.enviado == False:
+            self.cliente.connect(('localhost', 8080))
+            self.cliente.send((str.encode(".".join(str(x) for x in self.tablero))))
+            self.enviado = bool(self.cliente.recv(2048).decode("utf-8"))
+
+    def desconectar(self, booleano, ventana):
+        if booleano == 1 and ventana != 'juego':
+            self.cliente.send((str.encode('desconectar')))
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 class administrador_de_ventanas:
     def __init__(self):
         self.imagenes = administrador_de_imagenes()
         self.botones = administrador_de_botones()
         self.barcos = administrador_de_barcos()
+        self.red = red()
+        self.booleano = 0
 
     def salir_x(self):
         for event in pygame.event.get():
@@ -358,14 +378,19 @@ class administrador_de_ventanas:
         self.imagenes.preparacion()
         self.botones.preparacion()
         self.barcos.administrar()
-
+        if self.booleano == 1:
+            self.red.desconectar(self.booleano, self.botones.vent)
+            self.booleano = 0
 
     def juego(self):
+        self.booleano = 1
         self.imagenes.juego()
         self.botones.juego()
         self.barcos.ubicar()
         self.barcos.rvs_celda()
-        # self.barcos.enviar()
+        self.red.copiar(self.barcos.tablero0)
+        self.red.conectar()
+        self.red.verificar(self.botones.vent)
         self.botones.clic()
         self.botones.actualizar_celda()
 
