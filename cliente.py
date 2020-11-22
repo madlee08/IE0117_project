@@ -20,19 +20,11 @@ def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
 class administrador_de_botones:
     def __init__(self):
         self.vent = 'menu'
-        self.fila0 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila1 = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila2 = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
-        self.fila3 = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
-        self.fila4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila6 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila7 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila8 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-        self.tablero = [self.fila0, self.fila1, self.fila2, self.fila3, self.fila4, self.fila5, self.fila6, self.fila7, self.fila8, self.fila9]
-
+        self.tablero_j2 = []
+        self.tablero_clic = []
+        for i in range(10):
+            self.tablero_clic.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        
     btn_jugar = pygame.image.load("./assets/botones/jugar.png")
     btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
     btn_salir = pygame.image.load("./assets/botones/salir.png")
@@ -40,6 +32,7 @@ class administrador_de_botones:
     btn_bscar = pygame.image.load("./assets/botones/buscar.png")
 
     actdo = pygame.image.load("./assets/tablero/acertado.png")
+    agua = pygame.image.load("./assets/tablero/agua.png")
 
     dX_boton = 200
     dY_boton = 50
@@ -107,7 +100,7 @@ class administrador_de_botones:
                     self.vent = 'preparacion'
                     for j in range(10):
                         for i in range(10):
-                            self.tablero[j][i] = 0
+                            self.tablero_clic[j][i] = 0
                     time.sleep(0.2)
 
     def clic(self):
@@ -118,15 +111,19 @@ class administrador_de_botones:
         if clic_izq == True:
             for j in range(10):
                 for i in range(10):
-                    if self.pX_tablero + 48*i <= pX_mouse <= self.pX_tablero + 48*(i+1):
-                        if self.pY_tablero + 48*j <= pY_mouse <= self.pY_tablero + 48*(j+1) :
-                            self.tablero[j][i] = 1
+                    if self.tablero_clic[j][i] != 1:
+                        if self.pX_tablero + 48*i <= pX_mouse <= self.pX_tablero + 48*(i+1):
+                            if self.pY_tablero + 48*j <= pY_mouse <= self.pY_tablero + 48*(j+1):
+                                self.tablero_clic[j][i] = 1
 
     def actualizar_celda(self):
         for j in range(10):
                 for i in range(10):
-                    if self.tablero[j][i] != 0:
+                    if self.tablero_clic[j][i] != 0:
+                        if self.tablero_j2[j][i] != 0:
                             pantalla.blit(self.actdo, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
+                        else:
+                            pantalla.blit(self.agua, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
 
     def instrucciones(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -140,6 +137,9 @@ class administrador_de_botones:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
                     self.vent = 'menu'
 
+    def copiar(self, de_tablero):
+        for i in range(10):
+            self.tablero_j2.append(de_tablero[i])
 
 class administrador_de_imagenes:
     tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
@@ -184,18 +184,10 @@ class administrador_de_barcos:
     barco = [b0, b1, b2, b3, b4]
 
     def __init__(self):
-        self.fila0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila4 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila6 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila7 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila8 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.fila9 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.tablero0 = []
 
-        self.tablero0 = [self.fila0, self.fila1, self.fila2, self.fila3, self.fila4, self.fila5, self.fila6, self.fila7, self.fila8, self.fila9]
+        for i in range(10):
+            self.tablero0.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
         self.pX = [434, 50, 386, 338, 290]
         self.pY = [434, 386, 386, 338, 290]
@@ -297,6 +289,7 @@ class administrador_de_barcos:
         self.limitar()
         self.ajustar()
         self.ubicar()
+        self.rvs_celda()
 
     def rvs_celda(self):
         for j in range(10):
@@ -329,6 +322,7 @@ class red:
         self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.enviado = False
         self.tablero = []
+        self.tablero_ent = []
 
     def copiar(self, de_tablero):
         for i in range(10):
@@ -339,14 +333,22 @@ class red:
             self.enviado = False
 
     def conectar(self):
-        
         if self.enviado == False:
+            
             self.cliente.connect(('localhost', 8080))
-            self.cliente.send((str.encode(".".join(str(x) for x in self.tablero))))
             self.enviado = bool(self.cliente.recv(2048).decode("utf-8"))
+            self.cliente.send((str.encode(".".join(str(x) for x in self.tablero))))
+            string = self.cliente.recv(2048).decode("utf-8").split(".")
+            for j in range(10):
+                lista = []
+                for i in range(10):
+                    lista.append(int(string[j][1+i*3]))
+                self.tablero_ent.append(lista)
+                print(self.tablero_ent[j])
+            
 
-    def desconectar(self, booleano, ventana):
-        if booleano == 1 and ventana != 'juego':
+    def desconectar(self, booleano):
+        if booleano == 1:
             self.cliente.send((str.encode('desconectar')))
             self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -361,11 +363,14 @@ class administrador_de_ventanas:
     def salir_x(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print("juego cerrado")
+                if self.botones.vent == 'juego':
+                    self.red.desconectar(1)
+                print("juego cerrado X")
                 pygame.quit()
                 sys.exit()
 
     def salir_menu(self):
+        print("juego cerrado MENU")
         pygame.quit()
         sys.exit()
 
@@ -379,7 +384,7 @@ class administrador_de_ventanas:
         self.botones.preparacion()
         self.barcos.administrar()
         if self.booleano == 1:
-            self.red.desconectar(self.booleano, self.botones.vent)
+            self.red.desconectar(self.booleano)
             self.booleano = 0
 
     def juego(self):
@@ -390,6 +395,7 @@ class administrador_de_ventanas:
         self.barcos.rvs_celda()
         self.red.copiar(self.barcos.tablero0)
         self.red.conectar()
+        self.botones.copiar(self.red.tablero_ent)
         self.red.verificar(self.botones.vent)
         self.botones.clic()
         self.botones.actualizar_celda()
