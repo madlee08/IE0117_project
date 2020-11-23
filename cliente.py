@@ -3,8 +3,10 @@ import pygame, sys, time, socket
 
 print("juego iniciado")
 pygame.init()
+pygame.mixer.quit()
+pygame.font.quit()
 
-
+reloj = pygame.time.Clock()
 #dimensiones de la pantalla del juego
 dX_vent = 1280
 dY_vent = 720
@@ -50,6 +52,7 @@ class administrador_de_botones:
 
     pX_tablero = 600
     pY_tablero = 50
+
     def menu(self):
         pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
         pantalla.blit(self.btn_instr, (self.pX_bmen, self.pY_instr))
@@ -323,6 +326,10 @@ class red:
         self.enviado = False
         self.tablero = []
         self.tablero_ent = []
+        self.voo = 1
+
+        for i in range(10):
+            self.tablero_ent.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def copiar(self, de_tablero):
         for i in range(10):
@@ -334,18 +341,19 @@ class red:
 
     def conectar(self):
         if self.enviado == False:
-            
             self.cliente.connect(('localhost', 8080))
-            self.enviado = bool(self.cliente.recv(2048).decode("utf-8"))
-            self.cliente.send((str.encode(".".join(str(x) for x in self.tablero))))
-            string = self.cliente.recv(2048).decode("utf-8").split(".")
-            for j in range(10):
-                lista = []
-                for i in range(10):
-                    lista.append(int(string[j][1+i*3]))
-                self.tablero_ent.append(lista)
-                print(self.tablero_ent[j])
+            self.cliente.send((str.encode(str(self.tablero))))
+            self.enviado = True
             
+        self.cliente.send((str.encode("dummy")))
+        string = self.cliente.recv(2048).decode("utf-8")
+        
+        if string[0] == '[' and self.voo == 1:
+            for i in range(10):
+                for j in range(10):
+                    self.tablero_ent[i][j] = int(string.split("],", 10)[i][2+3*j])
+            self.voo = 0
+            print(string)
 
     def desconectar(self, booleano):
         if booleano == 1:
@@ -385,6 +393,7 @@ class administrador_de_ventanas:
         self.barcos.administrar()
         if self.booleano == 1:
             self.red.desconectar(self.booleano)
+            self.red.voo = 1
             self.booleano = 0
 
     def juego(self):
@@ -395,10 +404,11 @@ class administrador_de_ventanas:
         self.barcos.rvs_celda()
         self.red.copiar(self.barcos.tablero0)
         self.red.conectar()
-        self.botones.copiar(self.red.tablero_ent)
         self.red.verificar(self.botones.vent)
-        self.botones.clic()
-        self.botones.actualizar_celda()
+        if self.red.voo == 0:
+            self.botones.copiar(self.red.tablero_ent)
+            self.botones.clic()
+            self.botones.actualizar_celda()
 
     
     def instrucciones(self):
@@ -428,3 +438,4 @@ ventana = administrador_de_ventanas()
 while True:
     ventana.administrar()
     pygame.display.update()
+    reloj.tick(60)
