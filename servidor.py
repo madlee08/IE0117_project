@@ -46,6 +46,18 @@ class administrador_estado:
     def tab_str(self, num_id):
         return str(self.tableros[num_id])
 
+    def listo(self, num_id):
+        if (num_id % 2) == 0:
+            if self.jgd_ctd[num_id + 1] == 1:
+                return True
+            else:
+                return False
+        else:
+            if self.jgd_ctd[num_id - 1] == 1:
+                return True
+            else:
+                return False
+
 def hilo(cliente):
     global cont
 
@@ -62,12 +74,13 @@ def hilo(cliente):
         print(cont.tableros[num_id][i])
 
     while True:
-        # if (num_id % 2) == 0:
-        #     cliente.send((str.encode(cont.tab_str(num_id+1))))
-
-        # elif (num_id % 2) == 1:
-        #     cliente.send((str.encode(cont.tab_str(num_id+1))))
-        cliente.send((str.encode(cont.tab_str(num_id))))
+        if cont.listo(num_id) == True:
+            if (num_id % 2) == 0:
+                cliente.send((str.encode(cont.tab_str(num_id+1))))
+            else:
+                cliente.send((str.encode(cont.tab_str(num_id-1))))
+        else:
+            cliente.send((str.encode("dummy")))
 
         string = cliente.recv(2048).decode("utf-8")
         if string == 'desconectar':
