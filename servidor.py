@@ -15,6 +15,7 @@ class administrador_estado:
         self.jgd_ctd = []
         self.partida = []
         self.tableros = []
+        self.tiros = []
         self.turno = []
 
         for i in range(int(self.max/2)):
@@ -24,8 +25,10 @@ class administrador_estado:
         for i in range(self.max):
             self.jgd_ctd.append(0)
             self.tableros.append(list())
+            self.tiros.append(list())
             for j in range(10):
                 self.tableros[i].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                self.tiros[i].append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def incrementar(self):
         self.num_jgd += 1
@@ -43,7 +46,12 @@ class administrador_estado:
     def copiar(self, num_id, str_tab):
         for i in range(10):
             for j in range(10):
-                self.tableros[num_id][i][j] = int(str_tab.split("],", 10)[i][2+3*j])
+                self.tableros[num_id][i][j] = int(str_tab.split("],", 9)[i][2+3*j])
+    
+    def copiar_tiros(self, num_id, str_tab):
+        for i in range(10):
+            for j in range(10):
+                self.tiros[num_id][i][j] = int(str_tab.split("],", 9)[i][2+3*j])
     
     def tab_str(self, num_id):
         return str(self.tableros[num_id])
@@ -90,18 +98,26 @@ def hilo(cliente):
 
             if partida_lista == True:
                 if (num_id % 2) == 0:
+                    string = str(cont.tiros[num_id+1])
                     if  cont.turno[int(num_id/2)] == 0:
-                        cliente.send(str.encode("True"))
+                        
+                        cliente.send(str.encode("True." + string))
 
                     else:
-                        cliente.send(str.encode("False"))
+                        cliente.send(str.encode("False." + string))
+                    
+                    # cliente.send(str.encode(str(cont.tiros[num_id+1])))
 
                 else:
+                    string2 = str(cont.tiros[num_id-1])
+
                     if  cont.turno[int(num_id/2)] == 1:
-                        cliente.send(str.encode("True"))
+                        cliente.send(str.encode("True." + string2))
 
                     else:
-                        cliente.send(str.encode("False"))
+                        cliente.send(str.encode("False." + string2))
+                    
+                    # cliente.send(str.encode(str(cont.tiros[num_id-1])))
 
         else:
             cliente.send(str.encode("dummy"))
@@ -109,7 +125,8 @@ def hilo(cliente):
 
         string = cliente.recv(2048).decode("utf-8")
 
-        if string == 'next':
+        if string[0] == '[':
+            cont.copiar_tiros(num_id, string)
             if (num_id % 2) == 0:
                 cont.turno[int(num_id/2)] = 1
 
@@ -128,6 +145,9 @@ def hilo(cliente):
 
     cont.disminuir()
     cont.jgd_ctd[num_id] = 0
+
+    for i in range(10):
+        cont.tiros[num_id][i]  = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     print('cliente', num_id + 1, 'desconectado.', cont.num_jgd, 'jugadores conectados.')
     cliente.close()
 

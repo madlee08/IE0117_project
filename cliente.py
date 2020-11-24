@@ -173,6 +173,14 @@ class administrador_de_botones:
     def copiar(self, de_tablero):
         for i in range(10):
             self.tablero_j2.append(de_tablero[i])
+    
+    def copiar_tiros(self, de_tablero):
+        for i in range(10):
+            self.tiros_rival[i] = de_tablero[i]
+    
+    def reset(self):
+        for i in range(10):
+            self.tiros_rival[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 class administrador_de_imagenes:
     tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
@@ -372,6 +380,8 @@ class red:
         self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.enviado = False
         self.tablero = []
+        self.tiros = []
+        self.tiros_rival = []
         self.tablero_ent = []
         self.voo = 1
         self.turno = False
@@ -379,10 +389,15 @@ class red:
 
         for i in range(10):
             self.tablero_ent.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def copiar(self, de_tablero):
         for i in range(10):
             self.tablero.append(de_tablero[i])
+
+    def copiar_tiros(self, de_tablero):
+        for i in range(10):
+            self.tiros.append(de_tablero[i])
 
     def conectar(self):
         if self.enviado == False:
@@ -391,7 +406,7 @@ class red:
             self.enviado = True
         
         if self.voo == 0 and self.turno == False:
-            self.cliente.send(str.encode("next"))
+            self.cliente.send(str.encode(str(self.tiros)))
         else:
             self.cliente.send(str.encode("dummy"))
 
@@ -401,12 +416,18 @@ class red:
         if string[0] == '[' and self.voo == 1:
             for i in range(10):
                 for j in range(10):
-                    self.tablero_ent[i][j] = int(string.split("],", 10)[i][2+3*j])
+                    self.tablero_ent[i][j] = int(string.split("],", 9)[i][2+3*j])
             self.voo = 0
             print(string)
 
-        if string == 'True':
-            self.turno = True
+        if string[0] != '[' and string[0] != 'r' and self.voo == 0:
+            booleano, tab = string.split(".", 1)
+            if booleano == 'True':
+                self.turno = True
+
+                for i in range(10):
+                    for j in range(10):
+                        self.tiros_rival[i][j] = int(tab.split("],", 9)[i][2+3*j])
 
         if string == 'rivaldc':
             self.fin = 2
@@ -459,6 +480,7 @@ class administrador_de_ventanas:
             self.red.voo = 1
             self.booleano2 = 1
             self.booleano4 = 1
+            self.botones.reset()
             self.booleano = 0
 
     def juego(self):
@@ -470,14 +492,21 @@ class administrador_de_ventanas:
             self.barcos.rvs_celda()
             self.red.copiar(self.barcos.tablero0)
             self.booleano2 = 0
+
+        self.red.copiar_tiros(self.botones.tablero_clic)
         self.red.conectar()
+
         if self.red.voo == 0:
             if self.booleano4 == 1:
                 self.botones.copiar(self.red.tablero_ent)
                 self.booleano4 = 0
             seleccionado = self.botones.clic(self.red.turno)
             self.red.turno = seleccionado
+            self.botones.copiar_tiros(self.red.tiros_rival)
+            self.botones.actualizar_celda_r()
+            
             self.botones.actualizar_celda_j()
+
         if self.red.fin != 0:
             self.botones.vent = 'fin'
 
@@ -487,6 +516,7 @@ class administrador_de_ventanas:
             self.red.fin = 0
             self.red.enviado = False
             self.red.voo = 1
+            self.botones.reset()
             self.booleano3 = 0
         self.imagenes.juego(0)
         self.barcos.ubicar()
