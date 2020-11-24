@@ -1,4 +1,4 @@
-import socket
+import socket, time
 from _thread import *
 
 zoc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -123,6 +123,7 @@ def hilo(cliente):
             if cont.listo(num_id) == False:
                 cont.partida[int(num_id/2)] = False
                 cliente.send(str.encode("rivaldc"))
+                time.sleep(3)
                 break
 
     cont.disminuir()
