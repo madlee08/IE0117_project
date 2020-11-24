@@ -15,8 +15,8 @@ pantalla = pygame.display.set_mode((dX_vent, dY_vent))
 
 #función que halla la posición X de la imagen para
 #que quede centrado horizontalmente en la ventana
-def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
-    return (dimensionX_pantalla - dimensionX_imagen)/2
+def centrar(dim_pantalla, dim_imagen):
+    return (dim_pantalla - dim_imagen)/2
 
 
 class administrador_de_botones:
@@ -39,13 +39,15 @@ class administrador_de_botones:
     dX_boton = 200
     dY_boton = 50
 
-    pX_bmen = centrar_hztl(dX_vent, dX_boton)
+    pX_bmen = centrar(dX_vent, dX_boton)
     pY_jugar = 300
     pY_instr = 400
     pY_salir = 500
 
     pX_regsr = 1050
     pY_regsr = 650
+
+    pY_fin = 500
 
     pX_bscar = 800
     pY_bscar = 650
@@ -106,6 +108,22 @@ class administrador_de_botones:
                             self.tablero_clic[j][i] = 0
                     time.sleep(0.2)
 
+    def resultado(self):
+        pantalla.blit(self.btn_regsr, (self.pX_bmen, self.pY_fin))
+
+        pX_mouse = pygame.mouse.get_pos()[0]
+        pY_mouse = pygame.mouse.get_pos()[1]
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == True:
+            if self.pX_bmen <= pX_mouse <= self.pX_bmen + self.dX_boton:
+                if self.pY_fin <= pY_mouse <= self.pY_fin + self.dY_boton:
+                    self.vent = 'menu'
+                    for j in range(10):
+                        for i in range(10):
+                            self.tablero_clic[j][i] = 0
+                    time.sleep(0.2)
+
     def clic(self, turno):
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
@@ -118,6 +136,7 @@ class administrador_de_botones:
                         if self.pX_tablero + 48*i <= pX_mouse <= self.pX_tablero + 48*(i+1):
                             if self.pY_tablero + 48*j <= pY_mouse <= self.pY_tablero + 48*(j+1):
                                 self.tablero_clic[j][i] = 1
+                                time.sleep(0.2)
                                 return False
 
     def actualizar_celda(self):
@@ -150,6 +169,10 @@ class administrador_de_imagenes:
     tablero_b = pygame.image.load("./assets/tablero/tablero_blanco.png")
     ayuda = pygame.image.load("./assets/texto/ayuda.png")
     instr = pygame.image.load("./assets/texto/instrucciones.png")
+    carga = pygame.image.load("./assets/texto/carga.png")
+    gana = pygame.image.load("./assets/texto/ganado.png")
+    pierde = pygame.image.load("./assets/texto/perdido.png")
+
     pX_tablero = 50
     pY_tablero = 50
     pX_ayuda = 750
@@ -167,10 +190,21 @@ class administrador_de_imagenes:
         pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
         pantalla.blit(self.ayuda, (self.pX_ayuda, self.pY_ayuda))
 
-    def juego(self):
+    def juego(self, en_partida):
         pantalla.fill(self.azul)
         pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
         pantalla.blit(self.tablero_b, (600, 50))
+        if en_partida == 1:
+            pantalla.blit(self.carga,(600, 50))
+
+    def resultado(self, estado):
+        pantalla.fill(self.azul)
+        pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
+        pantalla.blit(self.tablero_b, (600, 50))
+        if estado == 1:
+            pass
+        else:
+            pantalla.blit(self.gana, (400, 300))
 
     def instrucciones(self):
         pantalla.fill(self.azul)
@@ -329,6 +363,7 @@ class red:
         self.tablero_ent = []
         self.voo = 1
         self.turno = False
+        self.fin = 0
 
         for i in range(10):
             self.tablero_ent.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -337,22 +372,19 @@ class red:
         for i in range(10):
             self.tablero.append(de_tablero[i])
 
-    def verificar(self, ventana):
-        if ventana != 'juego':
-            self.enviado = False
-
     def conectar(self):
         if self.enviado == False:
             self.cliente.connect(('localhost', 8080))
-            self.cliente.send((str.encode(str(self.tablero))))
+            self.cliente.send(str.encode(str(self.tablero)))
             self.enviado = True
         
         if self.voo == 0 and self.turno == False:
-            self.cliente.send((str.encode("next")))
+            self.cliente.send(str.encode("next"))
         else:
-            self.cliente.send((str.encode("dummy")))
-            
-        string = self.cliente.recv(2048).decode("utf-8")
+            self.cliente.send(str.encode("dummy"))
+
+        if self.fin == 0:
+            string = self.cliente.recv(2048).decode("utf-8")
         
         if string[0] == '[' and self.voo == 1:
             for i in range(10):
@@ -364,9 +396,14 @@ class red:
         if string == 'True':
             self.turno = True
 
+        if string == 'rivaldc':
+            self.fin = 2
+            self.voo = 1
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     def desconectar(self, booleano):
         if booleano == 1:
-            self.cliente.send((str.encode('desconectar')))
+            self.cliente.send(str.encode('desconectar'))
             self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 class administrador_de_ventanas:
@@ -376,7 +413,9 @@ class administrador_de_ventanas:
         self.barcos = administrador_de_barcos()
         self.red = red()
         self.booleano = 0
-
+        self.booleano2 = 1
+        self.booleano3 = 1
+        self.booleano4 = 1
     def salir_x(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -394,6 +433,8 @@ class administrador_de_ventanas:
     def menu(self):
         self.imagenes.menu()
         self.botones.menu()
+        self.booleano3 = 1
+        self.red.fin = 0
 
 
     def preparacion(self):
@@ -402,23 +443,43 @@ class administrador_de_ventanas:
         self.barcos.administrar()
         if self.booleano == 1:
             self.red.desconectar(self.booleano)
+            self.red.enviado = False
             self.red.voo = 1
+            self.booleano2 = 1
+            self.booleano4 = 1
             self.booleano = 0
 
     def juego(self):
         self.booleano = 1
-        self.imagenes.juego()
+        self.imagenes.juego(self.red.voo)
         self.botones.juego()
         self.barcos.ubicar()
-        self.barcos.rvs_celda()
-        self.red.copiar(self.barcos.tablero0)
+        if self.booleano2 == 1:
+            self.barcos.rvs_celda()
+            self.red.copiar(self.barcos.tablero0)
+            self.booleano2 = 0
         self.red.conectar()
-        self.red.verificar(self.botones.vent)
         if self.red.voo == 0:
-            self.botones.copiar(self.red.tablero_ent)
+            if self.booleano4 == 1:
+                self.botones.copiar(self.red.tablero_ent)
+                self.booleano4 = 0
             seleccionado = self.botones.clic(self.red.turno)
             self.red.turno = seleccionado
             self.botones.actualizar_celda()
+        if self.red.fin != 0:
+            self.botones.vent = 'fin'
+
+    def resultado(self):
+        if self.booleano3 == 1:
+            self.booleano = 0
+            self.red.fin = 0
+            self.red.enviado = False
+            self.red.voo = 1
+            self.booleano3 = 0
+        self.imagenes.resultado(self.red.fin)
+        self.barcos.ubicar()
+        self.botones.actualizar_celda()
+        self.botones.resultado()
 
     
     def instrucciones(self):
@@ -439,6 +500,9 @@ class administrador_de_ventanas:
 
         if self.botones.vent == 'juego':
             self.juego()
+
+        if self.botones.vent == 'fin':
+            self.resultado()
 
         if self.botones.vent == 'salir':
             self.salir_menu()

@@ -70,7 +70,7 @@ def hilo(cliente):
 
     cont.copiar(num_id, tab)
 
-    print('cliente', num_id + 1, 'conectado')
+    print('cliente', num_id + 1, 'conectado.', cont.num_jgd, 'jugadores conectados.')
 
     for i in range(10):
         print(cont.tableros[num_id][i])
@@ -81,30 +81,30 @@ def hilo(cliente):
         if cont.listo(num_id) == True:
             if partida_lista == False:
                 if (num_id % 2) == 0:
-                    cliente.send((str.encode(cont.tab_str(num_id+1))))
+                    cliente.send(str.encode(cont.tab_str(num_id+1)))
 
                 else:
-                    cliente.send((str.encode(cont.tab_str(num_id-1))))
-
+                    cliente.send(str.encode(cont.tab_str(num_id-1)))
+                cont.partida[int(num_id/2)] = True
                 partida_lista = True
 
             if partida_lista == True:
                 if (num_id % 2) == 0:
                     if  cont.turno[int(num_id/2)] == 0:
-                        cliente.send((str.encode("True")))
+                        cliente.send(str.encode("True"))
 
                     else:
-                        cliente.send((str.encode("False")))
+                        cliente.send(str.encode("False"))
 
                 else:
                     if  cont.turno[int(num_id/2)] == 1:
-                        cliente.send((str.encode("True")))
+                        cliente.send(str.encode("True"))
 
                     else:
-                        cliente.send((str.encode("False")))
+                        cliente.send(str.encode("False"))
 
         else:
-            cliente.send((str.encode("dummy")))
+            cliente.send(str.encode("dummy"))
 
 
         string = cliente.recv(2048).decode("utf-8")
@@ -119,9 +119,15 @@ def hilo(cliente):
         if string == 'desconectar':
             break
 
+        if cont.partida[int(num_id/2)] == True:
+            if cont.listo(num_id) == False:
+                cont.partida[int(num_id/2)] = False
+                cliente.send(str.encode("rivaldc"))
+                break
+
     cont.disminuir()
     cont.jgd_ctd[num_id] = 0
-    print('cliente', num_id + 1, 'desconectado')
+    print('cliente', num_id + 1, 'desconectado.', cont.num_jgd, 'jugadores conectados.')
     cliente.close()
 
 cont = administrador_estado(jgd_max)
