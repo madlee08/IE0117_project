@@ -15,9 +15,11 @@ class administrador_estado:
         self.jgd_ctd = []
         self.partida = []
         self.tableros = []
+        self.turno = []
 
         for i in range(int(self.max/2)):
             self.partida.append(False)
+            self.turno.append(0)
 
         for i in range(self.max):
             self.jgd_ctd.append(0)
@@ -73,18 +75,50 @@ def hilo(cliente):
     for i in range(10):
         print(cont.tableros[num_id][i])
 
+    partida_lista = False
+    
     while True:
         if cont.listo(num_id) == True:
-            if (num_id % 2) == 0:
-                cliente.send((str.encode(cont.tab_str(num_id+1))))
-            else:
-                cliente.send((str.encode(cont.tab_str(num_id-1))))
+            if partida_lista == False:
+                if (num_id % 2) == 0:
+                    cliente.send((str.encode(cont.tab_str(num_id+1))))
+
+                else:
+                    cliente.send((str.encode(cont.tab_str(num_id-1))))
+
+                partida_lista = True
+
+            if partida_lista == True:
+                if (num_id % 2) == 0:
+                    if  cont.turno[int(num_id/2)] == 0:
+                        cliente.send((str.encode("True")))
+
+                    else:
+                        cliente.send((str.encode("False")))
+
+                else:
+                    if  cont.turno[int(num_id/2)] == 1:
+                        cliente.send((str.encode("True")))
+
+                    else:
+                        cliente.send((str.encode("False")))
+
         else:
             cliente.send((str.encode("dummy")))
 
+
         string = cliente.recv(2048).decode("utf-8")
+
+        if string == 'next':
+            if (num_id % 2) == 0:
+                cont.turno[int(num_id/2)] = 1
+
+            else:
+                cont.turno[int(num_id/2)] = 0
+
         if string == 'desconectar':
             break
+
     cont.disminuir()
     cont.jgd_ctd[num_id] = 0
     print('cliente', num_id + 1, 'desconectado')

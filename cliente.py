@@ -106,18 +106,19 @@ class administrador_de_botones:
                             self.tablero_clic[j][i] = 0
                     time.sleep(0.2)
 
-    def clic(self):
+    def clic(self, turno):
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
         clic_izq = pygame.mouse.get_pressed()[0]
 
-        if clic_izq == True:
+        if clic_izq == True and turno == True:
             for j in range(10):
                 for i in range(10):
                     if self.tablero_clic[j][i] != 1:
                         if self.pX_tablero + 48*i <= pX_mouse <= self.pX_tablero + 48*(i+1):
                             if self.pY_tablero + 48*j <= pY_mouse <= self.pY_tablero + 48*(j+1):
                                 self.tablero_clic[j][i] = 1
+                                return False
 
     def actualizar_celda(self):
         for j in range(10):
@@ -327,6 +328,7 @@ class red:
         self.tablero = []
         self.tablero_ent = []
         self.voo = 1
+        self.turno = False
 
         for i in range(10):
             self.tablero_ent.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -344,8 +346,12 @@ class red:
             self.cliente.connect(('localhost', 8080))
             self.cliente.send((str.encode(str(self.tablero))))
             self.enviado = True
+        
+        if self.voo == 0 and self.turno == False:
+            self.cliente.send((str.encode("next")))
+        else:
+            self.cliente.send((str.encode("dummy")))
             
-        self.cliente.send((str.encode("dummy")))
         string = self.cliente.recv(2048).decode("utf-8")
         
         if string[0] == '[' and self.voo == 1:
@@ -354,6 +360,9 @@ class red:
                     self.tablero_ent[i][j] = int(string.split("],", 10)[i][2+3*j])
             self.voo = 0
             print(string)
+
+        if string == 'True':
+            self.turno = True
 
     def desconectar(self, booleano):
         if booleano == 1:
@@ -407,7 +416,8 @@ class administrador_de_ventanas:
         self.red.verificar(self.botones.vent)
         if self.red.voo == 0:
             self.botones.copiar(self.red.tablero_ent)
-            self.botones.clic()
+            seleccionado = self.botones.clic(self.red.turno)
+            self.red.turno = seleccionado
             self.botones.actualizar_celda()
 
     
