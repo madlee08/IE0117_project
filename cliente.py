@@ -24,7 +24,9 @@ class administrador_de_botones:
         self.vent = 'menu'
         self.tablero_j2 = []
         self.tablero_clic = []
+        self.tiros_rival = []
         for i in range(10):
+            self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tablero_clic.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         
     btn_jugar = pygame.image.load("./assets/botones/jugar.png")
@@ -35,6 +37,8 @@ class administrador_de_botones:
 
     actdo = pygame.image.load("./assets/tablero/acertado.png")
     agua = pygame.image.load("./assets/tablero/agua.png")
+
+    tiro_r = pygame.image.load("./assets/tablero/rival.png")
 
     dX_boton = 200
     dY_boton = 50
@@ -139,7 +143,7 @@ class administrador_de_botones:
                                 time.sleep(0.2)
                                 return False
 
-    def actualizar_celda(self):
+    def actualizar_celda_j(self):
         for j in range(10):
                 for i in range(10):
                     if self.tablero_clic[j][i] != 0:
@@ -147,6 +151,12 @@ class administrador_de_botones:
                             pantalla.blit(self.actdo, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
                         else:
                             pantalla.blit(self.agua, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
+
+    def actualizar_celda_r(self):
+        for j in range(10):
+                for i in range(10):
+                    if self.tiros_rival[j][i] != 0:
+                        pantalla.blit(self.tiro_r, (50 + 48*i, 50 + 48*j))
 
     def instrucciones(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -467,7 +477,7 @@ class administrador_de_ventanas:
                 self.booleano4 = 0
             seleccionado = self.botones.clic(self.red.turno)
             self.red.turno = seleccionado
-            self.botones.actualizar_celda()
+            self.botones.actualizar_celda_j()
         if self.red.fin != 0:
             self.botones.vent = 'fin'
 
@@ -480,7 +490,7 @@ class administrador_de_ventanas:
             self.booleano3 = 0
         self.imagenes.juego(0)
         self.barcos.ubicar()
-        self.botones.actualizar_celda()
+        self.botones.actualizar_celda_j()
         self.imagenes.resultado(self.red.fin)
         self.botones.resultado()
 
