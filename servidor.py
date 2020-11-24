@@ -123,7 +123,7 @@ def hilo(cliente):
             if cont.listo(num_id) == False:
                 cont.partida[int(num_id/2)] = False
                 cliente.send(str.encode("rivaldc"))
-                time.sleep(3)
+                time.sleep(0.8)
                 break
 
     cont.disminuir()

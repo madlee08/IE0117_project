@@ -172,6 +172,10 @@ class administrador_de_imagenes:
     carga = pygame.image.load("./assets/texto/carga.png")
     gana = pygame.image.load("./assets/texto/ganado.png")
     pierde = pygame.image.load("./assets/texto/perdido.png")
+    fin = pygame.image.load("./assets/fondo/fin.png")
+
+    pX_fin = centrar(dX_vent, 600)
+    pY_fin = centrar(dY_vent, 400)
 
     pX_tablero = 50
     pY_tablero = 50
@@ -198,9 +202,7 @@ class administrador_de_imagenes:
             pantalla.blit(self.carga,(600, 50))
 
     def resultado(self, estado):
-        pantalla.fill(self.azul)
-        pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
-        pantalla.blit(self.tablero_b, (600, 50))
+        pantalla.blit(self.fin, (self.pX_fin, self.pY_fin))
         if estado == 1:
             pass
         else:
@@ -476,9 +478,10 @@ class administrador_de_ventanas:
             self.red.enviado = False
             self.red.voo = 1
             self.booleano3 = 0
-        self.imagenes.resultado(self.red.fin)
+        self.imagenes.juego(0)
         self.barcos.ubicar()
         self.botones.actualizar_celda()
+        self.imagenes.resultado(self.red.fin)
         self.botones.resultado()
 
     
