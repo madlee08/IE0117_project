@@ -22,12 +22,13 @@ def centrar(dim_pantalla, dim_imagen):
 class administrador_de_botones:
     def __init__(self):
         self.vent = 'menu'
-        self.tablero_j2 = []
-        self.tablero_clic = []
+        self.tablero_rival = []
+        self.tiros_jugador = []
         self.tiros_rival = []
+
         for i in range(10):
             self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-            self.tablero_clic.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            self.tiros_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         
     btn_jugar = pygame.image.load("./assets/botones/jugar.png")
     btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
@@ -109,7 +110,7 @@ class administrador_de_botones:
                     self.vent = 'preparacion'
                     for j in range(10):
                         for i in range(10):
-                            self.tablero_clic[j][i] = 0
+                            self.tiros_jugador[j][i] = 0
                     time.sleep(0.2)
 
     def resultado(self):
@@ -125,7 +126,7 @@ class administrador_de_botones:
                     self.vent = 'menu'
                     for j in range(10):
                         for i in range(10):
-                            self.tablero_clic[j][i] = 0
+                            self.tiros_jugador[j][i] = 0
                     time.sleep(0.2)
 
     def clic(self, turno):
@@ -136,23 +137,23 @@ class administrador_de_botones:
         if clic_izq == True and turno == True:
             for j in range(10):
                 for i in range(10):
-                    if self.tablero_clic[j][i] != 1:
+                    if self.tiros_jugador[j][i] != 1:
                         if self.pX_tablero + 48*i <= pX_mouse <= self.pX_tablero + 48*(i+1):
                             if self.pY_tablero + 48*j <= pY_mouse <= self.pY_tablero + 48*(j+1):
-                                self.tablero_clic[j][i] = 1
+                                self.tiros_jugador[j][i] = 1
                                 time.sleep(0.2)
                                 return False
 
-    def actualizar_celda_j(self):
+    def update_tiros_j(self):
         for j in range(10):
                 for i in range(10):
-                    if self.tablero_clic[j][i] != 0:
-                        if self.tablero_j2[j][i] != 0:
+                    if self.tiros_jugador[j][i] != 0:
+                        if self.tablero_rival[j][i] != 0:
                             pantalla.blit(self.actdo, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
                         else:
                             pantalla.blit(self.agua, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
 
-    def actualizar_celda_r(self):
+    def update_tiros_r(self):
         for j in range(10):
                 for i in range(10):
                     if self.tiros_rival[j][i] != 0:
@@ -170,17 +171,18 @@ class administrador_de_botones:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
                     self.vent = 'menu'
 
-    def copiar(self, de_tablero):
+    def copiar_tab_r(self, de_tablero):
         for i in range(10):
-            self.tablero_j2.append(de_tablero[i])
+            self.tablero_rival.append(de_tablero[i])
     
-    def copiar_tiros(self, de_tablero):
+    def copiar_tiros_r(self, de_tablero):
         for i in range(10):
             self.tiros_rival[i] = de_tablero[i]
     
     def reset(self):
         for i in range(10):
             self.tiros_rival[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 
 class administrador_de_imagenes:
     tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
@@ -242,10 +244,7 @@ class administrador_de_barcos:
     barco = [b0, b1, b2, b3, b4]
 
     def __init__(self):
-        self.tablero0 = []
-
-        for i in range(10):
-            self.tablero0.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        self.tablero_jugador = []
 
         self.pX = [434, 50, 386, 338, 290]
         self.pY = [434, 386, 386, 338, 290]
@@ -254,6 +253,9 @@ class administrador_de_barcos:
         self.dY = [45, 45, 45, 45, 45]
 
         self.rotado = [False, False, False, False, False]
+
+        for i in range(10):
+            self.tablero_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def ubicar(self):
         for i in range(5):
@@ -341,6 +343,29 @@ class administrador_de_barcos:
                     if 50+47*i <= self.pY[j] <= 50 + 47*(i+1):
                         self.pY[j] = 50+48*i
 
+    def rvs_celda(self):
+        for j in range(10):
+            for i in range(10):
+                px_clr = pantalla.get_at((51+48*i, 51+48*j))
+
+                if px_clr == (1, 74, 7, 255):
+                    self.tablero_jugador[j][i] = 1
+
+                elif px_clr == (139, 85 , 8, 255):
+                    self.tablero_jugador[j][i] = 2
+
+                elif px_clr == (17, 89, 88, 255):
+                    self.tablero_jugador[j][i] = 3
+
+                elif px_clr == (140, 144, 13, 255):
+                    self.tablero_jugador[j][i] = 4
+
+                elif px_clr == (201, 95, 45, 255):
+                    self.tablero_jugador[j][i] = 5
+
+                else:
+                    self.tablero_jugador[j][i] = 0
+
     def administrar(self):
         self.rotar()
         self.trasladar()
@@ -349,64 +374,38 @@ class administrador_de_barcos:
         self.ubicar()
         self.rvs_celda()
 
-    def rvs_celda(self):
-        for j in range(10):
-            for i in range(10):
-                px_clr = pantalla.get_at((51+48*i, 51+48*j))
-
-                if px_clr == (1, 74, 7, 255):
-                    self.tablero0[j][i] = 1
-
-                elif px_clr == (139, 85 , 8, 255):
-                    self.tablero0[j][i] = 2
-
-                elif px_clr == (17, 89, 88, 255):
-                    self.tablero0[j][i] = 3
-
-                elif px_clr == (140, 144, 13, 255):
-                    self.tablero0[j][i] = 4
-
-                elif px_clr == (201, 95, 45, 255):
-                    self.tablero0[j][i] = 5
-
-                else:
-                    self.tablero0[j][i] = 0
-            #print temporal para ver que la matriz esté en orden
-            # print("{} ".format(self.tablero0[j]))
-
-
 class red:
     def __init__(self):
         self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.enviado = False
-        self.tablero = []
-        self.tiros = []
+        self.tablero_jugador = []
+        self.tiros_jugador = []
         self.tiros_rival = []
-        self.tablero_ent = []
+        self.tablero_rival = []
         self.voo = 1
         self.turno = False
         self.fin = 0
 
         for i in range(10):
-            self.tablero_ent.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            self.tablero_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-    def copiar(self, de_tablero):
+    def copiar_tab_j(self, de_tablero):
         for i in range(10):
-            self.tablero.append(de_tablero[i])
+            self.tablero_jugador.append(de_tablero[i])
 
-    def copiar_tiros(self, de_tablero):
+    def copiar_tiros_j(self, de_tablero):
         for i in range(10):
-            self.tiros.append(de_tablero[i])
+            self.tiros_jugador.append(de_tablero[i])
 
     def conectar(self):
         if self.enviado == False:
             self.cliente.connect(('localhost', 8080))
-            self.cliente.send(str.encode(str(self.tablero)))
+            self.cliente.send(str.encode(str(self.tablero_jugador)))
             self.enviado = True
         
         if self.voo == 0 and self.turno == False:
-            self.cliente.send(str.encode(str(self.tiros)))
+            self.cliente.send(str.encode(str(self.tiros_jugador)))
         else:
             self.cliente.send(str.encode("dummy"))
 
@@ -416,7 +415,7 @@ class red:
         if string[0] == '[' and self.voo == 1:
             for i in range(10):
                 for j in range(10):
-                    self.tablero_ent[i][j] = int(string.split("],", 9)[i][2+3*j])
+                    self.tablero_rival[i][j] = int(string.split("],", 9)[i][2+3*j])
             self.voo = 0
             print(string)
 
@@ -490,22 +489,22 @@ class administrador_de_ventanas:
         self.barcos.ubicar()
         if self.booleano2 == 1:
             self.barcos.rvs_celda()
-            self.red.copiar(self.barcos.tablero0)
+            self.red.copiar_tab_j(self.barcos.tablero_jugador)
             self.booleano2 = 0
 
-        self.red.copiar_tiros(self.botones.tablero_clic)
+        self.red.copiar_tiros_j(self.botones.tiros_jugador)
         self.red.conectar()
 
         if self.red.voo == 0:
             if self.booleano4 == 1:
-                self.botones.copiar(self.red.tablero_ent)
+                self.botones.copiar_tab_r(self.red.tablero_rival)
                 self.booleano4 = 0
             seleccionado = self.botones.clic(self.red.turno)
             self.red.turno = seleccionado
-            self.botones.copiar_tiros(self.red.tiros_rival)
-            self.botones.actualizar_celda_r()
+            self.botones.copiar_tiros_r(self.red.tiros_rival)
+            self.botones.update_tiros_r()
             
-            self.botones.actualizar_celda_j()
+            self.botones.update_tiros_j()
 
         if self.red.fin != 0:
             self.botones.vent = 'fin'
@@ -520,7 +519,7 @@ class administrador_de_ventanas:
             self.booleano3 = 0
         self.imagenes.juego(0)
         self.barcos.ubicar()
-        self.botones.actualizar_celda_j()
+        self.botones.update_tiros_j()
         self.imagenes.resultado(self.red.fin)
         self.botones.resultado()
 
