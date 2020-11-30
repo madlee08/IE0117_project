@@ -136,6 +136,20 @@ def hilo(cliente):
         if string == 'desconectar':
             break
 
+        if string == 'terminar':
+            if cont.turno[int(num_id/2)] == 0:
+                if (num_id % 2) == 0:
+                    cliente.send(str.encode("gana"))
+                else:
+                    cliente.send(str.encode("pierde"))
+            else:
+                if (num_id % 2) == 1:
+                    cliente.send(str.encode("gana"))
+                else:
+                    cliente.send(str.encode("pierde"))
+            time.sleep(0.8)
+            break
+
         if cont.partida[int(num_id/2)] == True:
             if cont.listo(num_id) == False:
                 cont.partida[int(num_id/2)] = False

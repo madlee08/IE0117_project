@@ -25,16 +25,17 @@ class administrador_de_botones:
         self.tablero_rival = []
         self.tiros_jugador = []
         self.tiros_rival = []
+        self.celdas = 0
 
         for i in range(10):
             self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tiros_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         
-    btn_jugar = pygame.image.load("./assets/botones/jugar.png")
-    btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
-    btn_salir = pygame.image.load("./assets/botones/salir.png")
-    btn_regsr = pygame.image.load("./assets/botones/regresar.png")
-    btn_bscar = pygame.image.load("./assets/botones/buscar.png")
+    btn_jugar = pygame.image.load("./assets/botones/jugar.png").convert_alpha()
+    btn_instr = pygame.image.load("./assets/botones/instrucciones.png").convert_alpha()
+    btn_salir = pygame.image.load("./assets/botones/salir.png").convert_alpha()
+    btn_regsr = pygame.image.load("./assets/botones/regresar.png").convert_alpha()
+    btn_bscar = pygame.image.load("./assets/botones/buscar.png").convert_alpha()
 
     actdo = pygame.image.load("./assets/tablero/acertado.png")
     agua = pygame.image.load("./assets/tablero/agua.png")
@@ -181,18 +182,37 @@ class administrador_de_botones:
     
     def reset(self):
         for i in range(10):
-            self.tiros_rival[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            for j in range(10):
+                self.tiros_rival[i][j] = 0
+
+    def revisar_tiros(self):
+        self.celdas = 0
+        for i in range(10):
+            for j in range(10):
+                if self.tiros_jugador[i][j] == 1 and self.tablero_rival[i][j] != 0:
+                    self.celdas += 1
+
+    def quedan_barcos(self):
+        if self.celdas != 17:
+            return True
+        else:
+            return False
 
 
 class administrador_de_imagenes:
     tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
     tablero_b = pygame.image.load("./assets/tablero/tablero_blanco.png")
-    ayuda = pygame.image.load("./assets/texto/ayuda.png")
-    instr = pygame.image.load("./assets/texto/instrucciones.png")
+    ayuda = pygame.image.load("./assets/texto/ayuda.png").convert_alpha()
+    instr = pygame.image.load("./assets/texto/instrucciones.png").convert_alpha()
     carga = pygame.image.load("./assets/texto/carga.png")
     gana = pygame.image.load("./assets/texto/ganado.png")
     pierde = pygame.image.load("./assets/texto/perdido.png")
-    fin = pygame.image.load("./assets/fondo/fin.png")
+    fin = pygame.image.load("./assets/fondo/fin.png").convert_alpha()
+
+    fondo = pygame.image.load("./assets/fondo/pixel_art_bg.png")
+
+    turno_jugador = pygame.image.load("./assets/texto/turno_jugador.png")
+    turno_rival = pygame.image.load("./assets/texto/turno_rival.png")
 
     pX_fin = centrar(dX_vent, 600)
     pY_fin = centrar(dY_vent, 400)
@@ -207,29 +227,35 @@ class administrador_de_imagenes:
     azul = (0 ,88,122)
     
     def menu(self):
-        pantalla.fill(self.azul)
+        pantalla.blit(self.fondo, (0,0))
     
     def preparacion(self):
-        pantalla.fill(self.azul)
+        pantalla.blit(self.fondo, (0,0))
         pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
         pantalla.blit(self.ayuda, (self.pX_ayuda, self.pY_ayuda))
 
-    def juego(self, en_partida):
-        pantalla.fill(self.azul)
+    def juego(self, en_partida, turno):
+        pantalla.blit(self.fondo, (0,0))
         pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
         pantalla.blit(self.tablero_b, (600, 50))
         if en_partida == 1:
             pantalla.blit(self.carga,(600, 50))
-
+        else:
+            if turno == True:
+                pantalla.blit(self.turno_jugador, (50, 550))
+            if turno == False:
+                pantalla.blit(self.turno_rival, (40, 550))
     def resultado(self, estado):
         pantalla.blit(self.fin, (self.pX_fin, self.pY_fin))
         if estado == 1:
-            pass
-        else:
+            pantalla.blit(self.gana, (400, 300))
+        if estado == 2:
+            pantalla.blit(self.pierde, (400, 300))
+        if estado == 3:
             pantalla.blit(self.gana, (400, 300))
 
     def instrucciones(self):
-        pantalla.fill(self.azul)
+        pantalla.blit(self.fondo, (0,0))
         pantalla.blit(self.instr, (self.pX_instr, self.pY_instr))
 
 
@@ -374,6 +400,7 @@ class administrador_de_barcos:
         self.ubicar()
         self.rvs_celda()
 
+
 class red:
     def __init__(self):
         self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -385,6 +412,7 @@ class red:
         self.voo = 1
         self.turno = False
         self.fin = 0
+        self.quedan_barcos = True
 
         for i in range(10):
             self.tablero_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -404,10 +432,14 @@ class red:
             self.cliente.send(str.encode(str(self.tablero_jugador)))
             self.enviado = True
         
-        if self.voo == 0 and self.turno == False:
-            self.cliente.send(str.encode(str(self.tiros_jugador)))
+        if self.quedan_barcos == False:
+                self.cliente.send(str.encode("terminar"))
+
         else:
-            self.cliente.send(str.encode("dummy"))
+            if self.voo == 0 and self.turno == False:
+                self.cliente.send(str.encode(str(self.tiros_jugador)))
+            else:
+                self.cliente.send(str.encode("dummy"))
 
         if self.fin == 0:
             string = self.cliente.recv(2048).decode("utf-8")
@@ -419,7 +451,7 @@ class red:
             self.voo = 0
             print(string)
 
-        if string[0] != '[' and string[0] != 'r' and self.voo == 0:
+        if (string[0] == 'T' or string[0] == 'F') and self.voo == 0:
             booleano, tab = string.split(".", 1)
             if booleano == 'True':
                 self.turno = True
@@ -429,6 +461,16 @@ class red:
                         self.tiros_rival[i][j] = int(tab.split("],", 9)[i][2+3*j])
 
         if string == 'rivaldc':
+            self.fin = 3
+            self.voo = 1
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        if string == 'gana':
+            self.fin = 1
+            self.voo = 1
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        if string == 'pierde':
             self.fin = 2
             self.voo = 1
             self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -437,6 +479,7 @@ class red:
         if booleano == 1:
             self.cliente.send(str.encode('desconectar'))
             self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
 class administrador_de_ventanas:
     def __init__(self):
@@ -480,11 +523,12 @@ class administrador_de_ventanas:
             self.booleano2 = 1
             self.booleano4 = 1
             self.botones.reset()
+            self.botones.celdas = 0
             self.booleano = 0
 
     def juego(self):
         self.booleano = 1
-        self.imagenes.juego(self.red.voo)
+        self.imagenes.juego(self.red.voo, self.red.turno)
         self.botones.juego()
         self.barcos.ubicar()
         if self.booleano2 == 1:
@@ -503,8 +547,10 @@ class administrador_de_ventanas:
             self.red.turno = seleccionado
             self.botones.copiar_tiros_r(self.red.tiros_rival)
             self.botones.update_tiros_r()
-            
             self.botones.update_tiros_j()
+            self.botones.revisar_tiros()
+            quedan = self.botones.quedan_barcos()
+            self.red.quedan_barcos = quedan
 
         if self.red.fin != 0:
             self.botones.vent = 'fin'
@@ -515,12 +561,15 @@ class administrador_de_ventanas:
             self.red.fin = 0
             self.red.enviado = False
             self.red.voo = 1
-            self.botones.reset()
+            self.botones.celdas = 0
             self.booleano3 = 0
-        self.imagenes.juego(0)
+        self.botones.reset()
+        turno = self.red.turno
+        self.imagenes.juego(0, turno)
         self.barcos.ubicar()
         self.botones.update_tiros_j()
-        self.imagenes.resultado(self.red.fin)
+        resultado = self.red.fin
+        self.imagenes.resultado(resultado)
         self.botones.resultado()
 
     
