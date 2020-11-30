@@ -3,7 +3,9 @@ from _thread import *
 
 zoc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-zoc.bind(('localhost', 8080))
+zoc.bind((socket.gethostname(), 8080))
+
+print("servidor iniciado")
 
 jgd_max = 4
 zoc.listen(jgd_max)

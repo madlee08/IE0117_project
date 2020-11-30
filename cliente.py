@@ -428,7 +428,7 @@ class red:
 
     def conectar(self):
         if self.enviado == False:
-            self.cliente.connect(('localhost', 8080))
+            self.cliente.connect(('35.226.60.53', 8080))
             self.cliente.send(str.encode(str(self.tablero_jugador)))
             self.enviado = True
         
