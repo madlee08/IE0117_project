@@ -1,10 +1,12 @@
-import pygame, sys, time
+import pygame, sys, time, socket
 
 
 print("juego iniciado")
 pygame.init()
+pygame.mixer.quit()
+pygame.font.quit()
 
-
+reloj = pygame.time.Clock()
 #dimensiones de la pantalla del juego
 dX_vent = 1280
 dY_vent = 720
@@ -13,32 +15,51 @@ pantalla = pygame.display.set_mode((dX_vent, dY_vent))
 
 #función que halla la posición X de la imagen para
 #que quede centrado horizontalmente en la ventana
-def centrar_hztl(dimensionX_pantalla, dimensionX_imagen):
-    return (dimensionX_pantalla - dimensionX_imagen)/2
+def centrar(dim_pantalla, dim_imagen):
+    return (dim_pantalla - dim_imagen)/2
 
 
 class administrador_de_botones:
     def __init__(self):
-        self.ventana = 'menu'
-        self.btn_jugar = pygame.image.load("./assets/botones/jugar.png")
-        self.btn_instr = pygame.image.load("./assets/botones/instrucciones.png")
-        self.btn_salir = pygame.image.load("./assets/botones/salir.png")
-        self.btn_regsr = pygame.image.load("./assets/botones/regresar.png")
-        self.btn_bscar = pygame.image.load("./assets/botones/buscar.png")
+        self.vent = 'menu'
+        self.tablero_rival = []
+        self.tiros_jugador = []
+        self.tiros_rival = []
+        self.celdas = 0
 
-        self.dX_boton = 200
-        self.dY_boton = 50
+        for i in range(10):
+            self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            self.tiros_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        
+    btn_jugar = pygame.image.load("./assets/botones/jugar.png").convert_alpha()
+    btn_instr = pygame.image.load("./assets/botones/instrucciones.png").convert_alpha()
+    btn_salir = pygame.image.load("./assets/botones/salir.png").convert_alpha()
+    btn_regsr = pygame.image.load("./assets/botones/regresar.png").convert_alpha()
+    btn_bscar = pygame.image.load("./assets/botones/buscar.png").convert_alpha()
 
-        self.pX_bmen = centrar_hztl(dX_vent, self.dX_boton)
-        self.pY_jugar = 300
-        self.pY_instr = 400
-        self.pY_salir = 500
+    actdo = pygame.image.load("./assets/tablero/acertado.png")
+    agua = pygame.image.load("./assets/tablero/agua.png")
 
-        self.pX_regsr = 1000
-        self.pY_regsr = 600
+    tiro_r = pygame.image.load("./assets/tablero/rival.png")
 
-        self.pX_bscar = 750
-        self.pY_bscar = 600
+    dX_boton = 200
+    dY_boton = 50
+
+    pX_bmen = centrar(dX_vent, dX_boton)
+    pY_jugar = 300
+    pY_instr = 400
+    pY_salir = 500
+
+    pX_regsr = 1050
+    pY_regsr = 650
+
+    pY_fin = 500
+
+    pX_bscar = 800
+    pY_bscar = 650
+
+    pX_tablero = 600
+    pY_tablero = 50
 
     def menu(self):
         pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
@@ -52,13 +73,13 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_bmen <= pX_mouse <= self.pX_bmen + self.dX_boton:
                 if self.pY_jugar <= pY_mouse <= self.pY_jugar + self.dY_boton:
-                    self.ventana = 'preparacion'
+                    self.vent = 'preparacion'
 
                 if self.pY_instr <= pY_mouse <= self.pY_instr + self.dY_boton:
-                    self.ventana = 'instrucciones'
+                    self.vent = 'instrucciones'
 
                 if self.pY_salir <= pY_mouse <= self.pY_salir + self.dY_boton:
-                    self.ventana = 'salir'
+                    self.vent = 'salir'
 
     def preparacion(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -71,7 +92,73 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.ventana = 'menu'
+                    self.vent = 'menu'
+            
+            if self.pX_bscar <= pX_mouse <= self.pX_bscar + self.dX_boton:
+                if self.pY_bscar <= pY_mouse <= self.pY_bscar + self.dY_boton:
+                    self.vent = 'juego'
+
+    def juego(self):
+        pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
+
+        pX_mouse = pygame.mouse.get_pos()[0]
+        pY_mouse = pygame.mouse.get_pos()[1]
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == True:
+            if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
+                if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
+                    self.vent = 'preparacion'
+                    for j in range(10):
+                        for i in range(10):
+                            self.tiros_jugador[j][i] = 0
+                    time.sleep(0.2)
+
+    def resultado(self):
+        pantalla.blit(self.btn_regsr, (self.pX_bmen, self.pY_fin))
+
+        pX_mouse = pygame.mouse.get_pos()[0]
+        pY_mouse = pygame.mouse.get_pos()[1]
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == True:
+            if self.pX_bmen <= pX_mouse <= self.pX_bmen + self.dX_boton:
+                if self.pY_fin <= pY_mouse <= self.pY_fin + self.dY_boton:
+                    self.vent = 'menu'
+                    for j in range(10):
+                        for i in range(10):
+                            self.tiros_jugador[j][i] = 0
+                    time.sleep(0.2)
+
+    def clic(self, turno):
+        pX_mouse = pygame.mouse.get_pos()[0]
+        pY_mouse = pygame.mouse.get_pos()[1]
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == True and turno == True:
+            for j in range(10):
+                for i in range(10):
+                    if self.tiros_jugador[j][i] != 1:
+                        if self.pX_tablero + 48*i <= pX_mouse <= self.pX_tablero + 48*(i+1):
+                            if self.pY_tablero + 48*j <= pY_mouse <= self.pY_tablero + 48*(j+1):
+                                self.tiros_jugador[j][i] = 1
+                                time.sleep(0.2)
+                                return False
+
+    def update_tiros_j(self):
+        for j in range(10):
+                for i in range(10):
+                    if self.tiros_jugador[j][i] != 0:
+                        if self.tablero_rival[j][i] != 0:
+                            pantalla.blit(self.actdo, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
+                        else:
+                            pantalla.blit(self.agua, (self.pX_tablero + 48*i, self.pY_tablero + 48*j))
+
+    def update_tiros_r(self):
+        for j in range(10):
+                for i in range(10):
+                    if self.tiros_rival[j][i] != 0:
+                        pantalla.blit(self.tiro_r, (50 + 48*i, 50 + 48*j))
 
     def instrucciones(self):
         pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
@@ -83,73 +170,107 @@ class administrador_de_botones:
         if clic_izq == True:
             if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
                 if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.ventana = 'menu'
-    
-    def administrar(self):
-        if self.ventana == 'menu':
-            self.menu()
+                    self.vent = 'menu'
 
-        if self.ventana == 'preparacion':
-            self.preparacion()
-
-        if self.ventana == 'instrucciones':
-            self.instrucciones()
+    def copiar_tab_r(self, de_tablero):
+        for i in range(10):
+            self.tablero_rival.append(de_tablero[i])
     
-    def obt_vent(self):
-        return self.ventana
+    def copiar_tiros_r(self, de_tablero):
+        for i in range(10):
+            self.tiros_rival[i] = de_tablero[i]
+    
+    def reset(self):
+        for i in range(10):
+            for j in range(10):
+                self.tiros_rival[i][j] = 0
+
+    def revisar_tiros(self):
+        self.celdas = 0
+        for i in range(10):
+            for j in range(10):
+                if self.tiros_jugador[i][j] == 1 and self.tablero_rival[i][j] != 0:
+                    self.celdas += 1
+
+    def quedan_barcos(self):
+        if self.celdas != 17:
+            return True
+        else:
+            return False
 
 
 class administrador_de_imagenes:
-    def __init__(self):
-        self.ventana = 'menu'
-        self.botones = administrador_de_botones()
-        self.tablero = pygame.image.load("./assets/tablero/tablero_juego.png")
-        self.ayuda = pygame.image.load("./assets/texto/ayuda.png")
-        self.instr = pygame.image.load("./assets/texto/instrucciones.png")
-        self.pX_tablero = 50
-        self.pY_tablero = 50
-        self.pX_ayuda = 750
-        self.pY_ayuda = 100
-        self.pX_instr = 160
-        self.pY_instr = 50
+    tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
+    tablero_b = pygame.image.load("./assets/tablero/tablero_blanco.png")
+    ayuda = pygame.image.load("./assets/texto/ayuda.png").convert_alpha()
+    instr = pygame.image.load("./assets/texto/instrucciones.png").convert_alpha()
+    carga = pygame.image.load("./assets/texto/carga.png")
+    gana = pygame.image.load("./assets/texto/ganado.png")
+    pierde = pygame.image.load("./assets/texto/perdido.png")
+    fin = pygame.image.load("./assets/fondo/fin.png").convert_alpha()
 
-        self.azul = (0 ,88,122)
+    fondo = pygame.image.load("./assets/fondo/pixel_art_bg.png")
+
+    turno_jugador = pygame.image.load("./assets/texto/turno_jugador.png")
+    turno_rival = pygame.image.load("./assets/texto/turno_rival.png")
+
+    pX_fin = centrar(dX_vent, 600)
+    pY_fin = centrar(dY_vent, 400)
+
+    pX_tablero = 50
+    pY_tablero = 50
+    pX_ayuda = 750
+    pY_ayuda = 100
+    pX_instr = 160
+    pY_instr = 50
+
+    azul = (0 ,88,122)
     
     def menu(self):
-        pantalla.fill(self.azul)
-        self.ventana = self.botones.obt_vent()
+        pantalla.blit(self.fondo, (0,0))
     
     def preparacion(self):
-        pantalla.fill(self.azul)
-        pantalla.blit(self.tablero, (self.pX_tablero, self.pY_tablero))
+        pantalla.blit(self.fondo, (0,0))
+        pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
         pantalla.blit(self.ayuda, (self.pX_ayuda, self.pY_ayuda))
-        self.ventana = self.botones.obt_vent()
+
+    def juego(self, en_partida, turno):
+        pantalla.blit(self.fondo, (0,0))
+        pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
+        pantalla.blit(self.tablero_b, (600, 50))
+        if en_partida == 1:
+            pantalla.blit(self.carga,(600, 50))
+        else:
+            if turno == True:
+                pantalla.blit(self.turno_jugador, (50, 550))
+            if turno == False:
+                pantalla.blit(self.turno_rival, (40, 550))
+    def resultado(self, estado):
+        pantalla.blit(self.fin, (self.pX_fin, self.pY_fin))
+        if estado == 1:
+            pantalla.blit(self.gana, (400, 300))
+        if estado == 2:
+            pantalla.blit(self.pierde, (400, 300))
+        if estado == 3:
+            pantalla.blit(self.gana, (400, 300))
 
     def instrucciones(self):
-        pantalla.fill(self.azul)
+        pantalla.blit(self.fondo, (0,0))
         pantalla.blit(self.instr, (self.pX_instr, self.pY_instr))
-        self.ventana = self.botones.obt_vent()
-
-    def administrar(self):
-        if ventana == 'menu':
-            self.menu()
-
-        if ventana == 'preparacion':
-            self.preparacion()
-
-        if ventana == 'instrucciones':
-            self.instrucciones()
 
 
 class administrador_de_barcos:
-    def __init__(self):
-        self.b0 = pygame.image.load("./assets/barcos/0_x2.png")
-        self.b1 = pygame.image.load("./assets/barcos/1_x3.png")
-        self.b2 = pygame.image.load("./assets/barcos/2_x3.png")
-        self.b3 = pygame.image.load("./assets/barcos/3_x4.png")
-        self.b4 = pygame.image.load("./assets/barcos/4_x5.png")
 
-        self.barco = [self.b0, self.b1, self.b2, self.b3, self.b4]
+    b0 = pygame.image.load("./assets/barcos/0_x2.png")
+    b1 = pygame.image.load("./assets/barcos/1_x3.png")
+    b2 = pygame.image.load("./assets/barcos/2_x3.png")
+    b3 = pygame.image.load("./assets/barcos/3_x4.png")
+    b4 = pygame.image.load("./assets/barcos/4_x5.png")
+
+    barco = [b0, b1, b2, b3, b4]
+
+    def __init__(self):
+        self.tablero_jugador = []
 
         self.pX = [434, 50, 386, 338, 290]
         self.pY = [434, 386, 386, 338, 290]
@@ -158,6 +279,9 @@ class administrador_de_barcos:
         self.dY = [45, 45, 45, 45, 45]
 
         self.rotado = [False, False, False, False, False]
+
+        for i in range(10):
+            self.tablero_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def ubicar(self):
         for i in range(5):
@@ -245,68 +369,238 @@ class administrador_de_barcos:
                     if 50+47*i <= self.pY[j] <= 50 + 47*(i+1):
                         self.pY[j] = 50+48*i
 
+    def rvs_celda(self):
+        for j in range(10):
+            for i in range(10):
+                px_clr = pantalla.get_at((51+48*i, 51+48*j))
+
+                if px_clr == (1, 74, 7, 255):
+                    self.tablero_jugador[j][i] = 1
+
+                elif px_clr == (139, 85 , 8, 255):
+                    self.tablero_jugador[j][i] = 2
+
+                elif px_clr == (17, 89, 88, 255):
+                    self.tablero_jugador[j][i] = 3
+
+                elif px_clr == (140, 144, 13, 255):
+                    self.tablero_jugador[j][i] = 4
+
+                elif px_clr == (201, 95, 45, 255):
+                    self.tablero_jugador[j][i] = 5
+
+                else:
+                    self.tablero_jugador[j][i] = 0
+
     def administrar(self):
         self.rotar()
         self.trasladar()
         self.limitar()
         self.ajustar()
         self.ubicar()
+        self.rvs_celda()
+
+
+class red:
+    def __init__(self):
+        self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.enviado = False
+        self.tablero_jugador = []
+        self.tiros_jugador = []
+        self.tiros_rival = []
+        self.tablero_rival = []
+        self.voo = 1
+        self.turno = False
+        self.fin = 0
+        self.quedan_barcos = True
+
+        for i in range(10):
+            self.tablero_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+    def copiar_tab_j(self, de_tablero):
+        for i in range(10):
+            self.tablero_jugador.append(de_tablero[i])
+
+    def copiar_tiros_j(self, de_tablero):
+        for i in range(10):
+            self.tiros_jugador.append(de_tablero[i])
+
+    def conectar(self):
+        if self.enviado == False:
+            self.cliente.connect(('localhost', 8080))
+            self.cliente.send(str.encode(str(self.tablero_jugador)))
+            self.enviado = True
+        
+        if self.quedan_barcos == False:
+                self.cliente.send(str.encode("terminar"))
+
+        else:
+            if self.voo == 0 and self.turno == False:
+                self.cliente.send(str.encode(str(self.tiros_jugador)))
+            else:
+                self.cliente.send(str.encode("dummy"))
+
+        if self.fin == 0:
+            string = self.cliente.recv(2048).decode("utf-8")
+        
+        if string[0] == '[' and self.voo == 1:
+            for i in range(10):
+                for j in range(10):
+                    self.tablero_rival[i][j] = int(string.split("],", 9)[i][2+3*j])
+            self.voo = 0
+            print(string)
+
+        if (string[0] == 'T' or string[0] == 'F') and self.voo == 0:
+            booleano, tab = string.split(".", 1)
+            if booleano == 'True':
+                self.turno = True
+
+                for i in range(10):
+                    for j in range(10):
+                        self.tiros_rival[i][j] = int(tab.split("],", 9)[i][2+3*j])
+
+        if string == 'rivaldc':
+            self.fin = 3
+            self.voo = 1
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        if string == 'gana':
+            self.fin = 1
+            self.voo = 1
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        if string == 'pierde':
+            self.fin = 2
+            self.voo = 1
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    def desconectar(self, booleano):
+        if booleano == 1:
+            self.cliente.send(str.encode('desconectar'))
+            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 class administrador_de_ventanas:
     def __init__(self):
-        self.ventana = 'menu'
         self.imagenes = administrador_de_imagenes()
         self.botones = administrador_de_botones()
         self.barcos = administrador_de_barcos()
-
+        self.red = red()
+        self.booleano = 0
+        self.booleano2 = 1
+        self.booleano3 = 1
+        self.booleano4 = 1
     def salir_x(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print("juego cerrado")
+                if self.botones.vent == 'juego':
+                    self.red.desconectar(1)
+                print("juego cerrado X")
                 pygame.quit()
                 sys.exit()
 
     def salir_menu(self):
+        print("juego cerrado MENU")
         pygame.quit()
         sys.exit()
 
     def menu(self):
-        self.salir_x()
         self.imagenes.menu()
-        self.botones.administrar()
-        pygame.display.update()
-        self.ventana = self.botones.obt_vent()
+        self.botones.menu()
+        self.booleano3 = 1
+        self.red.fin = 0
+
 
     def preparacion(self):
-        self.salir_x()
         self.imagenes.preparacion()
-        self.botones.administrar()
+        self.botones.preparacion()
         self.barcos.administrar()
-        pygame.display.update()
-        self.ventana = self.botones.obt_vent()
+        if self.booleano == 1:
+            self.red.desconectar(self.booleano)
+            self.red.enviado = False
+            self.red.voo = 1
+            self.booleano2 = 1
+            self.booleano4 = 1
+            self.botones.reset()
+            self.botones.celdas = 0
+            self.booleano = 0
+
+    def juego(self):
+        self.booleano = 1
+        self.imagenes.juego(self.red.voo, self.red.turno)
+        self.botones.juego()
+        self.barcos.ubicar()
+        if self.booleano2 == 1:
+            self.barcos.rvs_celda()
+            self.red.copiar_tab_j(self.barcos.tablero_jugador)
+            self.booleano2 = 0
+
+        self.red.copiar_tiros_j(self.botones.tiros_jugador)
+        self.red.conectar()
+
+        if self.red.voo == 0:
+            if self.booleano4 == 1:
+                self.botones.copiar_tab_r(self.red.tablero_rival)
+                self.booleano4 = 0
+            seleccionado = self.botones.clic(self.red.turno)
+            self.red.turno = seleccionado
+            self.botones.copiar_tiros_r(self.red.tiros_rival)
+            self.botones.update_tiros_r()
+            self.botones.update_tiros_j()
+            self.botones.revisar_tiros()
+            quedan = self.botones.quedan_barcos()
+            self.red.quedan_barcos = quedan
+
+        if self.red.fin != 0:
+            self.botones.vent = 'fin'
+
+    def resultado(self):
+        if self.booleano3 == 1:
+            self.booleano = 0
+            self.red.fin = 0
+            self.red.enviado = False
+            self.red.voo = 1
+            self.botones.celdas = 0
+            self.booleano3 = 0
+        self.botones.reset()
+        turno = self.red.turno
+        self.imagenes.juego(0, turno)
+        self.barcos.ubicar()
+        self.botones.update_tiros_j()
+        resultado = self.red.fin
+        self.imagenes.resultado(resultado)
+        self.botones.resultado()
+
     
     def instrucciones(self):
-        self.salir_x()
         self.imagenes.instrucciones()
-        self.botones.administrar()
-        pygame.display.update()
-        self.ventana = self.botones.obt_vent()
+        self.botones.instrucciones()
+
 
     def administrar(self):
-        if self.ventana == 'menu':
+        self.salir_x()
+        if self.botones.vent == 'menu':
             self.menu()
 
-        if self.ventana == 'preparacion':
+        if self.botones.vent == 'preparacion':
             self.preparacion()
 
-        if self.ventana == 'instrucciones':
+        if self.botones.vent == 'instrucciones':
             self.instrucciones()
 
-        if self.ventana == 'salir':
+        if self.botones.vent == 'juego':
+            self.juego()
+
+        if self.botones.vent == 'fin':
+            self.resultado()
+
+        if self.botones.vent == 'salir':
             self.salir_menu()
 
 #programa principal
 ventana = administrador_de_ventanas()
 while True:
     ventana.administrar()
+    pygame.display.update()
+    reloj.tick(60)
