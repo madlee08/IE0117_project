@@ -18,6 +18,153 @@ pantalla = pygame.display.set_mode((dX_vent, dY_vent))
 def centrar(dim_pantalla, dim_imagen):
     return (dim_pantalla - dim_imagen)/2
 
+# -----------------------------------------------------------------------------------------------------------------------------
+# Posiciones X y Y de la imagen de fondo
+pX_fondo = 0
+pY_fondo = 0
+
+# -----------------------------------------------------------------------------------------------------------------------------
+# Constantes de la seccion de menu
+
+# Botones
+JGR_mu = 0 # Jugar
+INS_mu = 1 # Instrucciones
+CRD_mu = 2 # Creditos
+SLR_mu = 3
+
+# Dimensiones X (dX) y Y (dY) y posiciones X (pX) y Y (dY) de los botones de la seccion del menu
+# Orden de los elementos de las listas: [0] Jugar, [1] Instrucciones, [2] Creditos, [3] Salir
+dX_btn_mu = [200, 200, 0, 200]
+dY_btn_mu = [50, 50, 0, 50]
+
+pX_btn_mu = [centrar(dX_vent, dX_btn_mu[JGR_mu]), centrar(dX_vent, dX_btn_mu[INS_mu]), 0, centrar(dX_vent, dX_btn_mu[SLR_mu])]
+pY_btn_mu = [300, 400, 0, 500]
+
+# -----------------------------------------------------------------------------------------------------------------------------
+# Constantes de la seccion de instrucciones
+
+# Botones
+RGS_in = 0 # Regresar
+
+# Textos
+TXI_in = 0 # Instrucciones
+
+# Dimensiones X (dX) y Y (dY) y posiciones X (pX) y Y (dY) de los botones de la seccion instrucciones
+# Orden de los elementos de las listas: [0] Regresar
+dX_btn_in = [200]
+dY_btn_in = [50]
+
+pX_btn_in = [1050]
+pY_btn_in = [650]
+
+# Posiciones X (pX) y Y (dY) de los textos de la seccion del instrucciones
+# Orden de los elementos de las listas: [0] Instrucciones
+pX_txt_in = [160]
+pY_txt_in = [50]
+
+# -----------------------------------------------------------------------------------------------------------------------------
+# Constantes de la seccion de preparacion
+
+# Botones
+RST_pr = 0 # Reset
+BSR_pr = 1 # Buscar rival
+RGS_pr = 2 # Regresar
+
+# Textos
+TXI_pr = 0 # Instrucciones
+
+# Tableros
+TAJ_pr = 0 # Jugador
+
+# Dimensiones X (dX) y Y (dY) y posiciones X (pX) y Y (dY) de los botones de la seccion de preparacion
+# Orden de los elementos de las listas: [0] Reset, [1] Buscar rival, [2] Regresar
+dX_btn_pr = [200, 200, 200]
+dY_btn_pr = [50, 50, 50]
+
+pX_btn_pr = [0, 800, 1050]
+pY_btn_pr = [0, 650, 650]
+
+# Posiciones X (pX) y Y (dY) de los textos de la seccion de preparacion
+# Orden de los elementos de las listas: [0] Instrucciones
+pX_txt_pr = [750]
+pY_txt_pr = [100]
+
+# Posiciones X (pX) y Y (dY) de los tableros de la seccion de preparacion
+# Orden de los elementos de las listas: [0] Jugador
+pX_tab_pr = [50]
+pY_tab_pr = [50]
+
+# -----------------------------------------------------------------------------------------------------------------------------
+# Constantes de la seccion en partida 
+
+# Botones
+RGS_pt = 0 # Regresar
+
+# Tableros
+TAJ_pt = 0 # Jugador
+TAR_pt = 1 # Rival
+
+# Textos
+CRG_pt = 0 # Buscando rival
+
+# Dimensiones X (dX) y Y (dY) y posiciones X (pX) y Y (dY) de los botones de la seccion en partida
+# Orden de los elementos de las listas: [0] Regresar
+dX_btn_pt = [200]
+dY_btn_pt = [50]
+
+pX_btn_pt = [1050]
+pY_btn_pt = [650]
+
+# Posiciones X (pX) y Y (dY) de los tableros de la seccion en partida
+# Orden de los elementos de las listas: [0] Jugador, [1] Rival
+pX_tab_pt = [50, 600]
+pY_tab_pt = [50, 50]
+
+# Posiciones X (pX) y Y (dY) de los textos de la seccion en partida
+# Orden de los elementos de las listas: [0] Buscando rival
+pX_txt_pt = [pX_tab_pt[TAR_pt]]
+pY_txt_pt = [pY_tab_pt[TAR_pt]]
+
+# rutas relativa de los imagenes
+ruta_fondo = "./assets/fondo/pixel_art_bg.png"
+
+ruta_btn_jgr = "./assets/botones/jugar.png"
+ruta_btn_ins = "./assets/botones/instrucciones.png"
+ruta_btn_slr = "./assets/botones/salir.png"
+ruta_btn_rgs = "./assets/botones/regresar.png"
+ruta_btn_bsr = "./assets/botones/buscar.png"
+
+ruta_txt_ins = "./assets/texto/instrucciones.png"
+ruta_txt_ayd = "./assets/texto/ayuda.png"
+ruta_txt_crg = "./assets/texto/carga.png"
+
+ruta_tab_jgd = "./assets/tablero/tablero_azul.png"
+ruta_tab_rvl = "./assets/tablero/tablero_blanco.png"
+
+# cargador de imagenes de pygame
+png_fondo = pygame.image.load(ruta_fondo).convert_alpha()
+
+png_btn_jgr = pygame.image.load(ruta_btn_jgr).convert_alpha()
+png_btn_ins = pygame.image.load(ruta_btn_ins).convert_alpha()
+png_btn_slr = pygame.image.load(ruta_btn_slr).convert_alpha()
+png_btn_rgs = pygame.image.load(ruta_btn_rgs).convert_alpha()
+png_btn_bsr = pygame.image.load(ruta_btn_bsr).convert_alpha()
+
+png_txt_ins = pygame.image.load(ruta_txt_ins).convert_alpha()
+png_txt_ayd = pygame.image.load(ruta_txt_ayd).convert_alpha()
+png_txt_crg = pygame.image.load(ruta_txt_crg).convert_alpha()
+
+png_tab_jgd = pygame.image.load(ruta_tab_jgd).convert_alpha()
+png_tab_rvl = pygame.image.load(ruta_tab_rvl).convert_alpha()
+
+
+# dX_btn_prep = []
+
+# dX_btn_part = []
+
+# dX_btn_inst = []
+# dX_btn_fin = []
+
 
 class administrador_de_botones:
     def __init__(self):
@@ -30,12 +177,8 @@ class administrador_de_botones:
         for i in range(10):
             self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tiros_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-        
-    btn_jugar = pygame.image.load("./assets/botones/jugar.png").convert_alpha()
-    btn_instr = pygame.image.load("./assets/botones/instrucciones.png").convert_alpha()
-    btn_salir = pygame.image.load("./assets/botones/salir.png").convert_alpha()
-    btn_regsr = pygame.image.load("./assets/botones/regresar.png").convert_alpha()
-    btn_bscar = pygame.image.load("./assets/botones/buscar.png").convert_alpha()
+
+    btn_regsr = png_btn_rgs
 
     actdo = pygame.image.load("./assets/tablero/acertado.png")
     agua = pygame.image.load("./assets/tablero/agua.png")
@@ -46,68 +189,62 @@ class administrador_de_botones:
     dY_boton = 50
 
     pX_bmen = centrar(dX_vent, dX_boton)
-    pY_jugar = 300
-    pY_instr = 400
-    pY_salir = 500
-
-    pX_regsr = 1050
-    pY_regsr = 650
 
     pY_fin = 500
-
-    pX_bscar = 800
-    pY_bscar = 650
 
     pX_tablero = 600
     pY_tablero = 50
 
     def menu(self):
-        pantalla.blit(self.btn_jugar, (self.pX_bmen, self.pY_jugar))
-        pantalla.blit(self.btn_instr, (self.pX_bmen, self.pY_instr))
-        pantalla.blit(self.btn_salir, (self.pX_bmen, self.pY_salir))
-
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
         clic_izq = pygame.mouse.get_pressed()[0]
 
         if clic_izq == True:
-            if self.pX_bmen <= pX_mouse <= self.pX_bmen + self.dX_boton:
-                if self.pY_jugar <= pY_mouse <= self.pY_jugar + self.dY_boton:
+            if pX_btn_mu[JGR_mu] <= pX_mouse <= pX_btn_mu[JGR_mu] + dX_btn_mu[JGR_mu]:
+                if pY_btn_mu[JGR_mu] <= pY_mouse <= pY_btn_mu[JGR_mu] + dY_btn_mu[JGR_mu]:
                     self.vent = 'preparacion'
 
-                if self.pY_instr <= pY_mouse <= self.pY_instr + self.dY_boton:
+            if pX_btn_mu[INS_mu] <= pX_mouse <= pX_btn_mu[INS_mu] + dX_btn_mu[INS_mu]:
+                if pY_btn_mu[INS_mu] <= pY_mouse <= pY_btn_mu[INS_mu] + dY_btn_mu[INS_mu]:
                     self.vent = 'instrucciones'
 
-                if self.pY_salir <= pY_mouse <= self.pY_salir + self.dY_boton:
+            if pX_btn_mu[SLR_mu] <= pX_mouse <= pX_btn_mu[SLR_mu] + dX_btn_mu[SLR_mu]:
+                if pY_btn_mu[SLR_mu] <= pY_mouse <= pY_btn_mu[SLR_mu] + dY_btn_mu[SLR_mu]:
                     self.vent = 'salir'
 
-    def preparacion(self):
-        pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
-        pantalla.blit(self.btn_bscar, (self.pX_bscar, self.pY_bscar))
-
+    def instrucciones(self):
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
         clic_izq = pygame.mouse.get_pressed()[0]
 
         if clic_izq == True:
-            if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
-                if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
+            if pX_btn_in[RGS_in] <= pX_mouse <= pX_btn_in[RGS_in] + dX_btn_in[RGS_in]:
+                if pY_btn_in[RGS_in] <= pY_mouse <= pY_btn_in[RGS_in] + dY_btn_in[RGS_in]:
+                    self.vent = 'menu'
+
+    def preparacion(self):
+        pX_mouse = pygame.mouse.get_pos()[0]
+        pY_mouse = pygame.mouse.get_pos()[1]
+        clic_izq = pygame.mouse.get_pressed()[0]
+
+        if clic_izq == True:
+            if pX_btn_pr[RGS_pr] <= pX_mouse <= pX_btn_pr[RGS_pr] + dX_btn_pr[RGS_pr]:
+                if pY_btn_pr[RGS_pr] <= pY_mouse <= pY_btn_pr[RGS_pr] + dY_btn_pr[RGS_pr]:
                     self.vent = 'menu'
             
-            if self.pX_bscar <= pX_mouse <= self.pX_bscar + self.dX_boton:
-                if self.pY_bscar <= pY_mouse <= self.pY_bscar + self.dY_boton:
+            if pX_btn_pr[BSR_pr] <= pX_mouse <= pX_btn_pr[BSR_pr] + dX_btn_pr[BSR_pr]:
+                if pY_btn_pr[BSR_pr] <= pY_mouse <= pY_btn_pr[BSR_pr] + dY_btn_pr[BSR_pr]:
                     self.vent = 'juego'
 
     def juego(self):
-        pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
-
         pX_mouse = pygame.mouse.get_pos()[0]
         pY_mouse = pygame.mouse.get_pos()[1]
         clic_izq = pygame.mouse.get_pressed()[0]
 
         if clic_izq == True:
-            if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
-                if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
+            if pX_btn_pt[RGS_pt] <= pX_mouse <= pX_btn_pt[RGS_pt] + dX_btn_pt[RGS_pt]:
+                if pY_btn_pt[RGS_pt] <= pY_mouse <= pY_btn_pt[RGS_pt] + dY_btn_pt[RGS_pt]:
                     self.vent = 'preparacion'
                     for j in range(10):
                         for i in range(10):
@@ -160,18 +297,6 @@ class administrador_de_botones:
                     if self.tiros_rival[j][i] != 0:
                         pantalla.blit(self.tiro_r, (50 + 48*i, 50 + 48*j))
 
-    def instrucciones(self):
-        pantalla.blit(self.btn_regsr, (self.pX_regsr, self.pY_regsr))
-
-        pX_mouse = pygame.mouse.get_pos()[0]
-        pY_mouse = pygame.mouse.get_pos()[1]
-        clic_izq = pygame.mouse.get_pressed()[0]
-
-        if clic_izq == True:
-            if self.pX_regsr <= pX_mouse <= self.pX_regsr + self.dX_boton:
-                if self.pY_regsr <= pY_mouse <= self.pY_regsr + self.dY_boton:
-                    self.vent = 'menu'
-
     def copiar_tab_r(self, de_tablero):
         for i in range(10):
             self.tablero_rival.append(de_tablero[i])
@@ -200,51 +325,47 @@ class administrador_de_botones:
 
 
 class administrador_de_imagenes:
-    tablero_a = pygame.image.load("./assets/tablero/tablero_azul.png")
-    tablero_b = pygame.image.load("./assets/tablero/tablero_blanco.png")
-    ayuda = pygame.image.load("./assets/texto/ayuda.png").convert_alpha()
-    instr = pygame.image.load("./assets/texto/instrucciones.png").convert_alpha()
-    carga = pygame.image.load("./assets/texto/carga.png")
     gana = pygame.image.load("./assets/texto/ganado.png")
     pierde = pygame.image.load("./assets/texto/perdido.png")
     fin = pygame.image.load("./assets/fondo/fin.png").convert_alpha()
-
-    fondo = pygame.image.load("./assets/fondo/pixel_art_bg.png")
 
     turno_jugador = pygame.image.load("./assets/texto/turno_jugador.png")
     turno_rival = pygame.image.load("./assets/texto/turno_rival.png")
 
     pX_fin = centrar(dX_vent, 600)
     pY_fin = centrar(dY_vent, 400)
-
-    pX_tablero = 50
-    pY_tablero = 50
-    pX_ayuda = 750
-    pY_ayuda = 100
-    pX_instr = 160
-    pY_instr = 50
-
-    azul = (0 ,88,122)
     
     def menu(self):
-        pantalla.blit(self.fondo, (0,0))
+        pantalla.blit(png_fondo, (pX_fondo, pY_fondo))
+        pantalla.blit(png_btn_jgr, (pX_btn_mu[JGR_mu], pY_btn_mu[JGR_mu]))
+        pantalla.blit(png_btn_ins, (pX_btn_mu[INS_mu], pY_btn_mu[INS_mu]))
+        pantalla.blit(png_btn_slr, (pX_btn_mu[SLR_mu], pY_btn_mu[SLR_mu]))
     
+    def instrucciones(self):
+        pantalla.blit(png_fondo, (pX_fondo, pY_fondo))
+        pantalla.blit(png_btn_rgs, (pX_btn_in[RGS_in], pY_btn_in[RGS_in]))
+        pantalla.blit(png_txt_ins, (pX_txt_in[TXI_in], pY_txt_in[TXI_in]))
+
     def preparacion(self):
-        pantalla.blit(self.fondo, (0,0))
-        pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
-        pantalla.blit(self.ayuda, (self.pX_ayuda, self.pY_ayuda))
+        pantalla.blit(png_fondo, (pX_fondo, pY_fondo))
+        pantalla.blit(png_btn_rgs, (pX_btn_pr[RGS_pr], pY_btn_pr[RGS_pr]))
+        pantalla.blit(png_btn_bsr, (pX_btn_pr[BSR_pr], pY_btn_pr[BSR_pr]))
+        pantalla.blit(png_tab_jgd, (pX_tab_pr[TAJ_pr], pY_tab_pr[TAJ_pr]))
+        pantalla.blit(png_txt_ayd, (pX_txt_pr[TXI_pr], pY_tab_pr[TXI_pr]))
 
     def juego(self, en_partida, turno):
-        pantalla.blit(self.fondo, (0,0))
-        pantalla.blit(self.tablero_a, (self.pX_tablero, self.pY_tablero))
-        pantalla.blit(self.tablero_b, (600, 50))
+        pantalla.blit(png_fondo, (pX_fondo, pY_fondo))
+        pantalla.blit(png_btn_rgs, (pX_btn_pt[RGS_pt], pY_btn_pt[RGS_pt]))
+        pantalla.blit(png_tab_jgd, (pX_tab_pt[TAJ_pt], pY_tab_pt[TAJ_pt]))
+        pantalla.blit(png_tab_rvl, (pX_tab_pt[TAR_pt], pY_tab_pt[TAR_pt]))
         if en_partida == 1:
-            pantalla.blit(self.carga,(600, 50))
+            pantalla.blit(png_txt_crg,(pX_txt_pt[CRG_pt], pY_txt_pt[CRG_pt]))
         else:
             if turno == True:
                 pantalla.blit(self.turno_jugador, (50, 550))
             if turno == False:
                 pantalla.blit(self.turno_rival, (40, 550))
+
     def resultado(self, estado):
         pantalla.blit(self.fin, (self.pX_fin, self.pY_fin))
         if estado == 1:
@@ -254,9 +375,6 @@ class administrador_de_imagenes:
         if estado == 3:
             pantalla.blit(self.gana, (400, 300))
 
-    def instrucciones(self):
-        pantalla.blit(self.fondo, (0,0))
-        pantalla.blit(self.instr, (self.pX_instr, self.pY_instr))
 
 
 class administrador_de_barcos:
@@ -415,21 +533,24 @@ class red:
         self.quedan_barcos = True
 
         for i in range(10):
+            self.tablero_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            self.tiros_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tablero_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def copiar_tab_j(self, de_tablero):
         for i in range(10):
-            self.tablero_jugador.append(de_tablero[i])
+            self.tablero_jugador[i] = de_tablero[i]
 
     def copiar_tiros_j(self, de_tablero):
         for i in range(10):
-            self.tiros_jugador.append(de_tablero[i])
+            self.tiros_jugador[i] = de_tablero[i]
 
     def conectar(self):
         if self.enviado == False:
             self.cliente.connect(('35.226.60.53', 8080))
             self.cliente.send(str.encode(str(self.tablero_jugador)))
+            print(len(str(self.tablero_jugador)))
             self.enviado = True
         
         if self.quedan_barcos == False:
@@ -438,6 +559,7 @@ class red:
         else:
             if self.voo == 0 and self.turno == False:
                 self.cliente.send(str.encode(str(self.tiros_jugador)))
+                print(len(str(self.tiros_jugador)))
             else:
                 self.cliente.send(str.encode("dummy"))
 
