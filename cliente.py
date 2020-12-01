@@ -175,6 +175,7 @@ class administrador_de_botones:
         self.celdas = 0
 
         for i in range(10):
+            self.tablero_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tiros_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             self.tiros_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
@@ -299,7 +300,7 @@ class administrador_de_botones:
 
     def copiar_tab_r(self, de_tablero):
         for i in range(10):
-            self.tablero_rival.append(de_tablero[i])
+            self.tablero_rival[i] = de_tablero[i]
     
     def copiar_tiros_r(self, de_tablero):
         for i in range(10):
