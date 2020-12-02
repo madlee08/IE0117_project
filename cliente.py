@@ -157,7 +157,8 @@ png_txt_crg = pygame.image.load(ruta_txt_crg).convert_alpha()
 png_tab_jgd = pygame.image.load(ruta_tab_jgd).convert_alpha()
 png_tab_rvl = pygame.image.load(ruta_tab_rvl).convert_alpha()
 
-
+# llave para entrar al servidor
+KEY = "fd4mCbapCLhgPdNr82dSyLdRGL7DUNZMzREdgVxDupyEn73T3xv2mpKRyDSpMMfAscB6eAhZ2DWNfUtfcz2j4JdGuj9YkbQmyNwLjwcesxTj3Jj8LRdfHKuE48kA65jR"
 # dX_btn_prep = []
 
 # dX_btn_part = []
@@ -550,6 +551,8 @@ class red:
     def conectar(self):
         if self.enviado == False:
             self.cliente.connect(('35.226.60.53', 8080))
+            self.cliente.send(str.encode(KEY))
+            time.sleep(1)
             self.cliente.send(str.encode(str(self.tablero_jugador)))
             print(len(str(self.tablero_jugador)))
             self.enviado = True

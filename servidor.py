@@ -5,6 +5,9 @@ zoc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 zoc.bind((socket.gethostname(), 8080))
 
+# llave para dejar entrar al cliente
+KEY = "fd4mCbapCLhgPdNr82dSyLdRGL7DUNZMzREdgVxDupyEn73T3xv2mpKRyDSpMMfAscB6eAhZ2DWNfUtfcz2j4JdGuj9YkbQmyNwLjwcesxTj3Jj8LRdfHKuE48kA65jR"
+
 print("servidor iniciado")
 
 jgd_max = 4
@@ -64,6 +67,7 @@ class administrador_estado:
                 return True
             else:
                 return False
+
         else:
             if self.jgd_ctd[num_id - 1] == 1:
                 return True
@@ -71,100 +75,109 @@ class administrador_estado:
                 return False
 
 def hilo(cliente):
-    global cont
+    key = cliente.recv(2048).decode("utf-8")
 
-    cont.incrementar()
+    if key == KEY:
+        global cont
 
-    num_id = cont.ubicar_jgd()
-    tab = cliente.recv(2048).decode("utf-8")
+        cont.incrementar()
+        num_id = cont.ubicar_jgd()
 
-    cont.copiar(num_id, tab)
+        tab = cliente.recv(2048).decode("utf-8")
+        while tab[0] != '[':
+            tab = cliente.recv(2048).decode("utf-8")
 
-    print('cliente', num_id + 1, 'conectado.', cont.num_jgd, 'jugadores conectados.')
+        cont.copiar(num_id, tab)
 
-    for i in range(10):
-        print(cont.tableros[num_id][i])
+        print('cliente', num_id + 1, 'conectado.', cont.num_jgd, 'jugadores conectados.')
 
-    partida_lista = False
-    
-    while True:
-        if cont.listo(num_id) == True:
-            if partida_lista == False:
-                if (num_id % 2) == 0:
-                    cliente.send(str.encode(cont.tab_str(num_id+1)))
+        for i in range(10):
+            print(cont.tableros[num_id][i])
 
-                else:
-                    cliente.send(str.encode(cont.tab_str(num_id-1)))
-                cont.partida[int(num_id/2)] = True
-                partida_lista = True
+        partida_lista = False
 
-            if partida_lista == True:
-                if (num_id % 2) == 0:
-                    string = str(cont.tiros[num_id+1])
-                    if  cont.turno[int(num_id/2)] == 0:
-                        
-                        cliente.send(str.encode("True." + string))
+        while True:
+            if cont.listo(num_id) == True:
+                if partida_lista == False:
+                    if (num_id % 2) == 0:
+                        cliente.send(str.encode(cont.tab_str(num_id+1)))
 
                     else:
-                        cliente.send(str.encode("False." + string))
-                    
-                    # cliente.send(str.encode(str(cont.tiros[num_id+1])))
+                        cliente.send(str.encode(cont.tab_str(num_id-1)))
 
-                else:
-                    string2 = str(cont.tiros[num_id-1])
+                    cont.partida[int(num_id/2)] = True
+                    partida_lista = True
 
-                    if  cont.turno[int(num_id/2)] == 1:
-                        cliente.send(str.encode("True." + string2))
+                if partida_lista == True:
+                    if (num_id % 2) == 0:
+                        string = str(cont.tiros[num_id+1])
+
+                        if  cont.turno[int(num_id/2)] == 0:
+                            cliente.send(str.encode("True." + string))
+
+                        else:
+                            cliente.send(str.encode("False." + string))
 
                     else:
-                        cliente.send(str.encode("False." + string2))
-                    
-                    # cliente.send(str.encode(str(cont.tiros[num_id-1])))
+                        string2 = str(cont.tiros[num_id-1])
 
-        else:
-            cliente.send(str.encode("dummy"))
+                        if  cont.turno[int(num_id/2)] == 1:
+                            cliente.send(str.encode("True." + string2))
 
-
-        string = cliente.recv(2048).decode("utf-8")
-
-        if string[0] == '[':
-            cont.copiar_tiros(num_id, string)
-            if (num_id % 2) == 0:
-                cont.turno[int(num_id/2)] = 1
+                        else:
+                            cliente.send(str.encode("False." + string2))       
 
             else:
-                cont.turno[int(num_id/2)] = 0
+                cliente.send(str.encode("dummy"))
 
-        if string == 'desconectar':
-            break
 
-        if string == 'terminar':
-            if cont.turno[int(num_id/2)] == 0:
+            string = cliente.recv(2048).decode("utf-8")
+
+            if string[0] == '[':
+                cont.copiar_tiros(num_id, string)
+
                 if (num_id % 2) == 0:
-                    cliente.send(str.encode("gana"))
-                else:
-                    cliente.send(str.encode("pierde"))
-            else:
-                if (num_id % 2) == 1:
-                    cliente.send(str.encode("gana"))
-                else:
-                    cliente.send(str.encode("pierde"))
-            time.sleep(0.8)
-            break
+                    cont.turno[int(num_id/2)] = 1
 
-        if cont.partida[int(num_id/2)] == True:
-            if cont.listo(num_id) == False:
-                cont.partida[int(num_id/2)] = False
-                cliente.send(str.encode("rivaldc"))
+                else:
+                    cont.turno[int(num_id/2)] = 0
+
+            if string == 'desconectar':
+                break
+
+            if string == 'terminar':
+                if cont.turno[int(num_id/2)] == 0:
+                    if (num_id % 2) == 0:
+                        cliente.send(str.encode("gana"))
+
+                    else:
+                        cliente.send(str.encode("pierde"))
+
+                else:
+                    if (num_id % 2) == 1:
+                        cliente.send(str.encode("gana"))
+
+                    else:
+                        cliente.send(str.encode("pierde"))
+
                 time.sleep(0.8)
                 break
 
-    cont.disminuir()
-    cont.jgd_ctd[num_id] = 0
+            if cont.partida[int(num_id/2)] == True:
+                if cont.listo(num_id) == False:
+                    cont.partida[int(num_id/2)] = False
+                    cliente.send(str.encode("rivaldc"))
+                    time.sleep(0.8)
+                    break
 
-    for i in range(10):
-        cont.tiros[num_id][i]  = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    print('cliente', num_id + 1, 'desconectado.', cont.num_jgd, 'jugadores conectados.')
+        cont.disminuir()
+        cont.jgd_ctd[num_id] = 0
+
+        for i in range(10):
+            cont.tiros[num_id][i]  = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+        print('cliente', num_id + 1, 'desconectado.', cont.num_jgd, 'jugadores conectados.')
+
     cliente.close()
 
 cont = administrador_estado(jgd_max)
