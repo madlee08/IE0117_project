@@ -69,6 +69,7 @@ pY_txt_in = [50]
 RST_pr = 0 # Reset
 BSR_pr = 1 # Buscar rival
 RGS_pr = 2 # Regresar
+RBC_pr = 3 # Reubicar barcos
 
 # Textos
 TXI_pr = 0 # Instrucciones
@@ -78,11 +79,11 @@ TAJ_pr = 0 # Jugador
 
 # Dimensiones X (dX) y Y (dY) y posiciones X (pX) y Y (dY) de los botones de la seccion de preparacion
 # Orden de los elementos de las listas: [0] Reset, [1] Buscar rival, [2] Regresar
-dX_btn_pr = [200, 200, 200]
-dY_btn_pr = [50, 50, 50]
+dX_btn_pr = [200, 200, 200, 200]
+dY_btn_pr = [50, 50, 50, 50]
 
-pX_btn_pr = [0, 800, 1050]
-pY_btn_pr = [0, 650, 650]
+pX_btn_pr = [0, 800, 1050, 1050]
+pY_btn_pr = [0, 650, 650, 570]
 
 # Posiciones X (pX) y Y (dY) de los textos de la seccion de preparacion
 # Orden de los elementos de las listas: [0] Instrucciones
@@ -134,6 +135,7 @@ ruta_btn_cdt = "./assets/botones/creditos.png"
 ruta_btn_slr = "./assets/botones/salir.png"
 ruta_btn_rgs = "./assets/botones/regresar.png"
 ruta_btn_bsr = "./assets/botones/buscar.png"
+ruta_btn_rbc = "./assets/botones/reubicar.png"
 
 ruta_txt_cdt = "./assets/texto/creditos_txt.png"
 ruta_txt_ins = "./assets/texto/instrucciones.png"
@@ -152,6 +154,7 @@ png_btn_cdt = pygame.image.load(ruta_btn_cdt).convert_alpha()
 png_btn_slr = pygame.image.load(ruta_btn_slr).convert_alpha()
 png_btn_rgs = pygame.image.load(ruta_btn_rgs).convert_alpha()
 png_btn_bsr = pygame.image.load(ruta_btn_bsr).convert_alpha()
+png_btn_rbc = pygame.image.load(ruta_btn_rbc).convert_alpha()
 
 png_txt_cdt = pygame.image.load(ruta_txt_cdt).convert_alpha()
 png_txt_ins = pygame.image.load(ruta_txt_ins).convert_alpha()
@@ -185,6 +188,7 @@ class administrador_de_botones:
         self.tiros_rival = []
         self.celdas = 0
         self.seleccionado = False
+        self.reubicar = False
 
         for i in range(10):
             self.tablero_rival.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -263,6 +267,12 @@ class administrador_de_botones:
             if pX_btn_pr[BSR_pr] <= pX_mouse <= pX_btn_pr[BSR_pr] + dX_btn_pr[BSR_pr]:
                 if pY_btn_pr[BSR_pr] <= pY_mouse <= pY_btn_pr[BSR_pr] + dY_btn_pr[BSR_pr]:
                     self.vent = 'juego'
+            
+            if pX_btn_pr[RBC_pr] <= pX_mouse <= pX_btn_pr[RBC_pr] + dX_btn_pr[RBC_pr]:
+                if pY_btn_pr[RBC_pr] <= pY_mouse <= pY_btn_pr[RBC_pr] + dY_btn_pr[RBC_pr]:
+                    self.reubicar = True
+            else:
+                self.reubicar = False
 
     def juego(self):
         pX_mouse = pygame.mouse.get_pos()[0]
@@ -382,6 +392,7 @@ class administrador_de_imagenes:
         pantalla.blit(png_fondo, (pX_fondo, pY_fondo))
         pantalla.blit(png_btn_rgs, (pX_btn_pr[RGS_pr], pY_btn_pr[RGS_pr]))
         pantalla.blit(png_btn_bsr, (pX_btn_pr[BSR_pr], pY_btn_pr[BSR_pr]))
+        pantalla.blit(png_btn_rbc, (pX_btn_pr[RBC_pr], pY_btn_pr[RBC_pr]))
         pantalla.blit(png_tab_jgd, (pX_tab_pr[TAJ_pr], pY_tab_pr[TAJ_pr]))
         pantalla.blit(png_txt_ayd, (pX_txt_pr[TXI_pr], pY_tab_pr[TXI_pr]))
 
@@ -543,6 +554,12 @@ class administrador_de_barcos:
                 else:
                     self.tablero_jugador[j][i] = 0
 
+    def reubicar(self):
+        self.pX = [434, 50, 386, 338, 290]
+        self.pY = [434, 386, 386, 338, 290]
+
+        self.rotado = [False, False, False, False, False]
+
     def administrar(self):
         self.rotar()
         self.trasladar()
@@ -680,6 +697,10 @@ class administrador_de_ventanas:
         self.imagenes.preparacion()
         self.botones.preparacion()
         self.barcos.administrar()
+
+        if self.botones.reubicar == True:
+            self.barcos.reubicar()
+
         if self.booleano == 1:
             self.red.desconectar(self.booleano)
             self.red.enviado = False
