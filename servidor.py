@@ -1,17 +1,24 @@
 import socket, time
 from _thread import *
 
+# Numero maximo de jugadores concurrentes
+JGD_MAX = 4
+
+# Numero de puerto
+PUERTO = 8080
+
+# Llave para dejar entrar al cliente
+KEY = "fd4mCbapCLhgPdNr82dSyLdRGL7DUNZMzREdgVxDupyEn73T3xv2mpKRyDSpMMfAscB6eAhZ2DWNfUtfcz2j4JdGuj9YkbQmyNwLjwcesxTj3Jj8LRdfHKuE48kA65jR"
+
+
 zoc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-zoc.bind((socket.gethostname(), 8080))
+zoc.bind((socket.gethostname(), PUERTO))
 
-# llave para dejar entrar al cliente
-KEY = "fd4mCbapCLhgPdNr82dSyLdRGL7DUNZMzREdgVxDupyEn73T3xv2mpKRyDSpMMfAscB6eAhZ2DWNfUtfcz2j4JdGuj9YkbQmyNwLjwcesxTj3Jj8LRdfHKuE48kA65jR"
+zoc.listen(JGD_MAX)
 
 print("servidor iniciado")
 
-jgd_max = 4
-zoc.listen(jgd_max)
 
 class administrador_estado:
     def __init__(self, max_jgd):
@@ -84,8 +91,6 @@ def hilo(cliente):
         num_id = cont.ubicar_jgd()
 
         tab = cliente.recv(2048).decode("utf-8")
-        while tab[0] != '[':
-            tab = cliente.recv(2048).decode("utf-8")
 
         cont.copiar(num_id, tab)
 
@@ -180,7 +185,7 @@ def hilo(cliente):
 
     cliente.close()
 
-cont = administrador_estado(jgd_max)
+cont = administrador_estado(JGD_MAX)
 
 while True:
     (cliente, direccion) = zoc.accept()
