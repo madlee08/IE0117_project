@@ -17,8 +17,6 @@ zoc.bind((socket.gethostname(), PUERTO))
 
 zoc.listen(JGD_MAX)
 
-print("servidor iniciado")
-
 
 class administrador_estado:
     def __init__(self, max_jgd):
@@ -94,6 +92,7 @@ def hilo(cliente):
 
         cont.copiar(num_id, tab)
 
+        print(time.asctime())
         print('cliente', num_id + 1, 'conectado.', cont.num_jgd, 'jugadores conectados.')
 
         for i in range(10):
@@ -181,11 +180,16 @@ def hilo(cliente):
         for i in range(10):
             cont.tiros[num_id][i]  = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+        print(time.asctime())
         print('cliente', num_id + 1, 'desconectado.', cont.num_jgd, 'jugadores conectados.')
 
     cliente.close()
 
 cont = administrador_estado(JGD_MAX)
+
+print(time.asctime())
+print("servidor iniciado")
+
 
 while True:
     (cliente, direccion) = zoc.accept()
