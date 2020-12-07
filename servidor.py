@@ -2,7 +2,7 @@ import socket, time
 from _thread import *
 
 # Numero maximo de jugadores concurrentes
-JGD_MAX = 4
+JGD_MAX = 20
 
 # Numero de puerto
 PUERTO = 8080
@@ -15,7 +15,7 @@ zoc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 zoc.bind((socket.gethostname(), PUERTO))
 
-zoc.listen(JGD_MAX)
+zoc.listen()
 
 
 class administrador_estado:
