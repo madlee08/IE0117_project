@@ -141,6 +141,7 @@ ruta_txt_cdt = "./assets/texto/creditos_txt.png"
 ruta_txt_ins = "./assets/texto/instrucciones.png"
 ruta_txt_ayd = "./assets/texto/ayuda.png"
 ruta_txt_crg = "./assets/texto/carga.png"
+ruta_txt_dcn = "./assets/texto/no_conexion.png"
 
 ruta_tab_jgd = "./assets/tablero/tablero_azul.png"
 ruta_tab_rvl = "./assets/tablero/tablero_blanco.png"
@@ -160,6 +161,7 @@ png_txt_cdt = pygame.image.load(ruta_txt_cdt).convert_alpha()
 png_txt_ins = pygame.image.load(ruta_txt_ins).convert_alpha()
 png_txt_ayd = pygame.image.load(ruta_txt_ayd).convert_alpha()
 png_txt_crg = pygame.image.load(ruta_txt_crg).convert_alpha()
+png_txt_dcn = pygame.image.load(ruta_txt_dcn).convert_alpha()
 
 png_tab_jgd = pygame.image.load(ruta_tab_jgd).convert_alpha()
 png_tab_rvl = pygame.image.load(ruta_tab_rvl).convert_alpha()
@@ -396,13 +398,18 @@ class administrador_de_imagenes:
         pantalla.blit(png_tab_jgd, (pX_tab_pr[TAJ_pr], pY_tab_pr[TAJ_pr]))
         pantalla.blit(png_txt_ayd, (pX_txt_pr[TXI_pr], pY_tab_pr[TXI_pr]))
 
-    def juego(self, en_partida, turno):
+    def juego(self, en_partida, turno, respuesta):
         pantalla.blit(png_fondo, (pX_fondo, pY_fondo))
         pantalla.blit(png_btn_rgs, (pX_btn_pt[RGS_pt], pY_btn_pt[RGS_pt]))
         pantalla.blit(png_tab_jgd, (pX_tab_pt[TAJ_pt], pY_tab_pt[TAJ_pt]))
         pantalla.blit(png_tab_rvl, (pX_tab_pt[TAR_pt], pY_tab_pt[TAR_pt]))
+
         if en_partida == 1:
-            pantalla.blit(png_txt_crg,(pX_txt_pt[CRG_pt], pY_txt_pt[CRG_pt]))
+            if respuesta == True:
+                pantalla.blit(png_txt_crg,(pX_txt_pt[CRG_pt], pY_txt_pt[CRG_pt]))
+
+            if respuesta == False:
+                pantalla.blit(png_txt_dcn,(pX_txt_pt[CRG_pt], pY_txt_pt[CRG_pt]))
         else:
             if turno == True:
                 pantalla.blit(self.turno_jugador, (590, 550))
@@ -582,6 +589,7 @@ class red:
         self.fin = 0
         self.quedan_barcos = True
         self.turno1 = None
+        self.respuesta = True
 
         for i in range(10):
             self.tablero_jugador.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -599,63 +607,73 @@ class red:
 
     def conectar(self):
         if self.enviado == False:
-            self.cliente.connect((IP_SERVIDOR, PUERTO))
-            self.cliente.send(str.encode(KEY))
-            time.sleep(1)
-            self.cliente.send(str.encode(str(self.tablero_jugador)))
-            print(len(str(self.tablero_jugador)))
+            try:
+                self.cliente.connect((IP_SERVIDOR, PUERTO))
+
+            except socket.error as error:
+                print(error)
+                self.respuesta = False
+            
+            if self.respuesta == True:
+                self.cliente.send(str.encode(KEY))
+                time.sleep(1)
+                self.cliente.send(str.encode(str(self.tablero_jugador)))
+                print(len(str(self.tablero_jugador)))
             self.enviado = True
         
-        if self.quedan_barcos == False:
-                self.cliente.send(str.encode("terminar"))
-
-        else:
-            if self.voo == 0 and self.turno == False:
-                self.cliente.send(str.encode(str(self.tiros_jugador)))
+        if self.respuesta == True:
+            if self.quedan_barcos == False:
+                    self.cliente.send(str.encode("terminar"))
 
             else:
-                self.cliente.send(str.encode("dummy"))
+                if self.voo == 0 and self.turno == False:
+                    self.cliente.send(str.encode(str(self.tiros_jugador)))
 
-            if self.turno == None:
-                self.turno1 = False
+                else:
+                    self.cliente.send(str.encode("dummy"))
 
-        if self.fin == 0:
-            string = self.cliente.recv(2048).decode("utf-8")
-        
-        if string[0] == '[' and self.voo == 1:
-            for i in range(10):
-                for j in range(10):
-                    self.tablero_rival[i][j] = int(string.split("],", 9)[i][2+3*j])
-            self.voo = 0
-            print(string)
+                if self.turno == None:
+                    self.turno1 = False
 
-        if (string[0] == 'T' or string[0] == 'F') and self.voo == 0:
-            booleano, tab = string.split(".", 1)
-            if booleano == 'True':
-                self.turno = True
-                self.turno1 = True
+            if self.fin == 0:
+                string = self.cliente.recv(2048).decode("utf-8")
+            
+            if string[0] == '[' and self.voo == 1:
                 for i in range(10):
                     for j in range(10):
-                        self.tiros_rival[i][j] = int(tab.split("],", 9)[i][2+3*j])
+                        self.tablero_rival[i][j] = int(string.split("],", 9)[i][2+3*j])
+                self.voo = 0
+                print(string)
 
-        if string == 'rivaldc':
-            self.fin = 3
-            self.voo = 1
-            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        
-        if string == 'gana':
-            self.fin = 1
-            self.voo = 1
-            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            if (string[0] == 'T' or string[0] == 'F') and self.voo == 0:
+                booleano, tab = string.split(".", 1)
+                if booleano == 'True':
+                    self.turno = True
+                    self.turno1 = True
+                    for i in range(10):
+                        for j in range(10):
+                            self.tiros_rival[i][j] = int(tab.split("],", 9)[i][2+3*j])
 
-        if string == 'pierde':
-            self.fin = 2
-            self.voo = 1
-            self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            if string == 'rivaldc':
+                self.fin = 3
+                self.voo = 1
+                self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            
+            if string == 'gana':
+                self.fin = 1
+                self.voo = 1
+                self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            if string == 'pierde':
+                self.fin = 2
+                self.voo = 1
+                self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def desconectar(self, booleano):
         if booleano == 1:
-            self.cliente.send(str.encode('desconectar'))
+            if self.respuesta == True:
+                self.cliente.send(str.encode('desconectar'))
+
             self.cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
@@ -710,6 +728,7 @@ class administrador_de_ventanas:
             self.botones.reset()
             self.botones.celdas = 0
             self.booleano = 0
+        self.red.respuesta = True
         self.red.fin = 0
         self.botones.seleccionado = False
         self.red.turno = False
@@ -717,7 +736,7 @@ class administrador_de_ventanas:
 
     def juego(self):
         self.booleano = 1
-        self.imagenes.juego(self.red.voo, self.red.turno1)
+        self.imagenes.juego(self.red.voo, self.red.turno1, self.red.respuesta)
         self.botones.juego()
         self.barcos.ubicar()
         if self.booleano2 == 1:
@@ -759,7 +778,7 @@ class administrador_de_ventanas:
             self.botones.seleccionado = 0
         self.botones.reset()
         turno = self.red.turno
-        self.imagenes.juego(0, turno)
+        self.imagenes.juego(0, turno, self.red.respuesta)
         self.barcos.ubicar()
         self.botones.update_tiros_j()
         self.imagenes.resultado(self.red.fin)
