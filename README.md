@@ -18,7 +18,7 @@ El archivo ejecutable que debe buscar es `battleship`, su ruta es `./cliente_win
 ### Requisitos
 Antes de descargar el código fuente, verifique que cumple los siguientes requisitos:
 - Tener [Python 3.7.4](https://www.python.org/downloads/release/python-374/) instalado.
-- Tener [Pygame 1.9.6](https://github.com/madlee08/battleship-project/tree/main#instalaci%C3%B3n-de-pygame-196) instalado.
+- Tener Pygame 1.9.6 instalado (ver la sección Instalación de Pygame 1.9.6).
 - [Opcional] Si desea crear el archivo ejecutable, debe tener [PyInstaller](https://www.pyinstaller.org/downloads.html) instalado.
 
 #### Instalación de Pygame 1.9.6
