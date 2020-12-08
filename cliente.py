@@ -419,13 +419,13 @@ class administrador_de_imagenes:
     def resultado(self, estado):
         pantalla.blit(self.fin, (self.pX_fin, self.pY_fin))
         if estado == 2:
-            pantalla.blit(self.gana, (490, 335))
+            pantalla.blit(self.pierde, (490, 335))
 
         elif estado == 3:
             pantalla.blit(self.gana, (490, 335))
 
         else:
-            pantalla.blit(self.pierde, (490, 335))
+            pantalla.blit(self.gana, (490, 335))
 
 
 class administrador_de_barcos:
