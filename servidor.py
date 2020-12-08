@@ -1,3 +1,6 @@
+# Autores: Olger Ramírez Delgado, Mike Mai Chen y Anthony Monestel Guzmán.
+# Este código está bajo la licencia de MIT.
+
 import socket, time
 from _thread import *
 
