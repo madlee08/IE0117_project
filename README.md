@@ -40,7 +40,7 @@ El código fuente se puede descargar aquí: [battleship-1.0.0.zip](https://githu
 
 Alternativamente se puede usar `git clone` para clonar este repositorio:
 ```shell
-git clone https://github.com/madlee08/battleship-project/
+git clone https://github.com/madlee08/battleship-project.git
 ```
 
 ### Ejecución del código
