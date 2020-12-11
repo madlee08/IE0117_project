@@ -1,4 +1,4 @@
-# Autores: Olger Ramírez Delgado, Mike Mai Chen y Anthony Monestel Guzmán.
+# Autores: Olger Ramírez Delgado y Mike Mai Chen.
 # Este código está bajo la licencia de MIT.
 
 import pygame, sys, time, socket
