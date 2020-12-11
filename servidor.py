@@ -106,6 +106,9 @@ def hilo(cliente):
         while True:
             if cont.listo(num_id) == True:
                 if partida_lista == False:
+
+                    time.sleep(1)
+                    
                     if (num_id % 2) == 0:
                         cliente.send(str.encode(cont.tab_str(num_id+1)))
 
