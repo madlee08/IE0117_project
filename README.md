@@ -6,8 +6,8 @@ Un sencillo juego de batalla naval (Battleship) de dos jugadores escrito en [Pyt
 Si desea probar el juego sin tener que instalar Python ni Pygame, puede descargar el ejecutable en uno de los siguientes enlaces:
 Sistema operativo | Archivo
 ----------------- | -------
-Debian 10 64 bits | [cliente_debian10_x64-1.0.1.zip](https://github.com/madlee08/battleship-project/releases/download/v1.0.2/cliente_deb10_x64.zip)
-Windows 10 64 bits | [cliente_win10_x64-1.0.1.zip](https://github.com/madlee08/battleship-project/releases/download/v1.0.2/cliente_win10_x64.zip)
+Debian 10 64 bits | [cliente_debian10_x64-1.0.2.zip](https://github.com/madlee08/battleship-project/releases/download/v1.0.2/cliente_deb10_x64.zip)
+Windows 10 64 bits | [cliente_win10_x64-1.0.2.zip](https://github.com/madlee08/battleship-project/releases/download/v1.0.2/cliente_win10_x64.zip)
 
 Una vez descargado el archivo `.zip`, descomprima el archivo `.zip` en un directorio de su preferencia. Dentro de ese directorio debe aparecer `cliente_win10_x64` (`cliente_deb10_x64`, respectivamente) si su sistema operativo es Windows 10 64 bits (Debian 10 64 bits, respectivamente).
 
