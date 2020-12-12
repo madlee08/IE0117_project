@@ -36,7 +36,7 @@ pip install -U pygame==1.9.6 --user
 Se agrega `==1.9.6` para indicar que se desea instalar específicamente la versión 1.9.6 de Pygame.
 
 ### Descarga del código fuente
-El código fuente se puede descargar aquí: [battleship-1.0.0.zip](https://github.com/madlee08/battleship-project/archive/v1.0.1.zip). Debe descomprimir el archivo `.zip`.
+El código fuente se puede descargar aquí: [battleship-source.zip](https://github.com/madlee08/battleship-project/archive/main.zip). Debe descomprimir el archivo `.zip`.
 
 Alternativamente se puede usar `git clone` para clonar este repositorio:
 ```shell
