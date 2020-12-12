@@ -3,16 +3,14 @@ Un sencillo juego de batalla naval (Battleship) de dos jugadores escrito en [Pyt
 
 ## Ejecutable
 ### Descarga del ejecutable
-Si desea probar el juego sin tener que instalar Python ni Pygame, puede descargar el ejecutable en uno de los siguientes enlaces:
+Si desea probar el juego sin tener que instalar Python ni Pygame, puede descargar el ejecutable en el siguiente enlace:
 Sistema operativo | Archivo
 ----------------- | -------
-Debian 10 64 bits | [cliente_debian10_x64-1.0.2.zip](https://github.com/madlee08/battleship-project/releases/download/v1.0.2/cliente_deb10_x64.zip)
 Windows 10 64 bits | [cliente_win10_x64-1.0.2.zip](https://github.com/madlee08/battleship-project/releases/download/v1.0.2/cliente_win10_x64.zip)
 
-Una vez descargado el archivo `.zip`, descomprima el archivo `.zip` en un directorio de su preferencia. Dentro de ese directorio debe aparecer `cliente_win10_x64` (`cliente_deb10_x64`, respectivamente) si su sistema operativo es Windows 10 64 bits (Debian 10 64 bits, respectivamente).
-
+Una vez descargado el archivo `.zip`, descomprima el archivo `.zip` en un directorio de su preferencia. Dentro de ese directorio debe aparecer `cliente_win10_x64`.
 ### Ejecución del juego
-El archivo ejecutable que debe buscar es `battleship`, su ruta es `./cliente_win10_x64/battleship` en Windows 10 (`./cliente_deb10_x64/battleship` si es en Debian 10). Una vez encontrado el archivo, ejecute dicho archivo. El juego debe abrirse.
+El archivo ejecutable que debe buscar es `battleship`, su ruta es `./cliente_win10_x64/battleship`. Una vez encontrado el archivo, ejecute dicho archivo. El juego debe abrirse.
 
 ## Código fuente
 ### Requisitos
@@ -24,11 +22,6 @@ Antes de descargar el código fuente, verifique que cumple los siguientes requis
 #### Instalación de Pygame 1.9.6
 De acuerdo con [Pygame](https://www.pygame.org/wiki/GettingStarted), la mejor manera de instalar Pygame es usar `pip`. Entonces, siguiendo las instrucciones de Pygame, abra una terminal y ejecute el siguiente comando:
 
-#### Debian
-```shell
-python3 -m pip install -U pygame==1.9.6 --user
-```
-#### Windows
 ```shell
 pip install -U pygame==1.9.6 --user
 ```
@@ -45,12 +38,7 @@ git clone https://github.com/madlee08/battleship-project.git
 
 ### Ejecución del código
 Para ejecutar el código, ejecute el siguiente comando en la terminal:
-#### Debian
-```shell
-python3 cliente.py
-```
 
-#### Windows
 ```shell
 py cliente.py
 ```
