@@ -1,3 +1,6 @@
+# Repositorio archivado
+Este repositorio está inactivo.
+
 # battleship-project
 Un sencillo juego de batalla naval (Battleship) de dos jugadores escrito en [Python](https://www.python.org/) utilizando [Pygame](https://www.pygame.org/news) para un curso de programación. Adicionalmente se utiliza [PyInstaller](https://www.pyinstaller.org/) para poder crear los archivos ejecutables.
 
@@ -6,7 +9,7 @@ Un sencillo juego de batalla naval (Battleship) de dos jugadores escrito en [Pyt
 Si desea probar el juego sin tener que instalar Python ni Pygame, puede descargar el ejecutable en el siguiente enlace:
 Sistema operativo | Archivo
 ----------------- | -------
-Windows 10 64 bits | [cliente_win10_x64-1.0.2.zip](https://github.com/madlee08/battleship-project/releases/download/v1.0.2/cliente_win10_x64.zip)
+Windows 10 64 bits | ~~cliente_win10_x64-1.0.2.zip~~
 
 Una vez descargado el archivo `.zip`, descomprima el archivo `.zip` en un directorio de su preferencia. Dentro de ese directorio debe aparecer `cliente_win10_x64`.
 ### Ejecución del juego
